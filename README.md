@@ -13,7 +13,7 @@ Singularity/Apptainer is also needed. The detail of installation can be found in
 
 ## Before running
 If the referene genomes donot have index, using below command to generate their index files and to put them in the same directory before running the pipeline.
-         singularity exec docker://staphb/bwa:0.7.17 bwa index <full path to your genome fasta file> 
+         '''singularity exec docker://staphb/bwa:0.7.17 bwa index <full path to your genome fasta file> '''
          
 ## How to run
 ### 
