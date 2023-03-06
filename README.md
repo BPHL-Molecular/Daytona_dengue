@@ -21,7 +21,7 @@ singularity exec docker://staphb/bwa:0.7.17 bwa index <full path to your genome 
 ### 
 1. put your data files into directory /fastqs. Your data file's name should look like "JBS22002292_1.fastq.gz", "JBS22002292_2.fastq.gz".
 2. open file "parames.yaml", set the parameters. 
-3. get into the directory of the pipeline, run 
+3. get into the top of the pipeline directory, then run 
 ```bash
 sbatch ./daytona_dengue.sh
 ```
