@@ -23,7 +23,7 @@ singularity exec docker://staphb/bwa:0.7.17 bwa index <full path to your genome 
 2. open file "parames.yaml", set the parameters. 
 3. get into the directory of the pipeline, run 
 ```bash
-"sbatch ./daytona_dengue.sh"
+sbatch ./daytona_dengue.sh
 ```
 
 ## Results
