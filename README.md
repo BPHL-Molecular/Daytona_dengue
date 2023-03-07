@@ -31,4 +31,4 @@ All results can be found in the directory /output.
 
 ## Note
 1. In the output file Serotypes.txt, a sample is considered as unserotypeed if its confident rate under 50%. This sample's exact taxon can be found in /output/kraken_out_broad.
-2. rename.sh can be used to change user's file name
+2. renamefile.sh can be used to change user's file name
