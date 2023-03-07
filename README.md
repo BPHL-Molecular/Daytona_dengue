@@ -30,4 +30,5 @@ sbatch ./daytona_dengue.sh
 All results can be found in the directory /output.
 
 ## Note
-In the output file Serotypes.txt, a sample is considered as unserotypeed if its confident rate under 50%. This sample's exact taxon can be found in /output/kraken_out_broad.  
+1. In the output file Serotypes.txt, a sample is considered as unserotypeed if its confident rate under 50%. This sample's exact taxon can be found in /output/kraken_out_broad.
+2. rename.sh can be used to change user's file name
