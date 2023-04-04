@@ -25,10 +25,10 @@ do
 done
 
 # move each sample's fastq data files to its serotype folder
-#mkdir ./fastqs/dengue1
-#mkdir ./fastqs/dengue2
-#mkdir ./fastqs/dengue3
-#mkdir ./fastqs/dengue4
+mkdir ./fastqs/dengue1
+mkdir ./fastqs/dengue2
+mkdir ./fastqs/dengue3
+mkdir ./fastqs/dengue4
 mkdir ./fastqs/unserotype
 
 echo "Sample","Serotype","Confidence" > Serotypes.txt
@@ -39,10 +39,8 @@ do
    echo ${f},$X,$Y >> Serotypes.txt
    if [ $(echo "${Y}>50.0"|bc -l) -eq 1 ]
    then
-      #mv ./fastqs/${f}_1.fastq.gz ./fastqs/dengue${X}/
-      #mv ./fastqs/${f}_2.fastq.gz ./fastqs/dengue${X}/
-      mv ./fastqs/${f}_1.fastq.gz ./fastqs/SER${X}_${f}_1.fastq.gz
-      mv ./fastqs/${f}_2.fastq.gz ./fastqs/SER${X}_${f}_2.fastq.gz
+      mv ./fastqs/${f}_1.fastq.gz ./fastqs/dengue${X}/
+      mv ./fastqs/${f}_2.fastq.gz ./fastqs/dengue${X}/
    else
       mv ./fastqs/${f}_1.fastq.gz ./fastqs/unserotype/
       mv ./fastqs/${f}_2.fastq.gz ./fastqs/unserotype/
