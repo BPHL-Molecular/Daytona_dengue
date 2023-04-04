@@ -16,7 +16,7 @@ Docker ( https://www.docker.com/ ) is needed if you select docker to run contain
 SLURM is needed if you plan use slurm to load the pipeline to run at high performance computing cluster. 
 
 ## Before running
-If the referene genomes donot have index, using below command to generate their index files and to put them in the same directory before running the pipeline.
+If the referene genomes donot have index, using a command below to generate their index files and to put them in the same directory before running the pipeline.
 ```bash
 bwa index <full path to your genome fasta file> 
 ```
@@ -24,7 +24,10 @@ Or
 ```bash
 singularity exec docker://staphb/bwa:0.7.17 bwa index <full path to your genome fasta file> 
 ```
-         
+Or
+```bash
+docker run staphb/bwa:0.7.17 bwa index <full path to your genome fasta file> 
+```         
 ## How to run
 ### By default: 
 By default, the pipeline uses singularity to run containers and is wrapped by SLURM. To run the pipeline by default, you should follow the steps below.
