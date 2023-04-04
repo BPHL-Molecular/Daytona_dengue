@@ -13,7 +13,7 @@ Singularity/Apptainer is needed if you select singularity to run containers in t
 
 Docker ( https://www.docker.com/ ) is needed if you select docker to run containers in the pipeline.
 
-SLURM is needed if you plan use slurm to load the pipeline to run at high performance computing cluster. 
+SLURM is needed if you plan use slurm to run the pipeline at HPC. 
 
 ## Before running
 If the referene genomes donot have index, using a command below to generate their index files and to put them in the same directory before running the pipeline.
