@@ -37,7 +37,6 @@ Note: the sbatch parameters setting is based on our cluser HiPerGator at Univers
 3. get into the top of the pipeline directory, then run 
 ```bash
 bash ./kraken2_viral.sh
-nextflow run daytona_dengue.nf -params-file params.yaml -c ./configs/singularity.config
 ``` 
 ```bash
 nextflow run daytona_dengue.nf -params-file params.yaml -c ./configs/singularity.config
@@ -48,7 +47,6 @@ nextflow run daytona_dengue.nf -params-file params.yaml -c ./configs/singularity
 3. get into the top of the pipeline directory, then run 
 ```bash
 bash ./kraken2_viral.sh
-nextflow run daytona_dengue.nf -params-file params.yaml -c ./configs/docker.config
 ```
 ```bash
 nextflow run daytona_dengue.nf -params-file params.yaml -c ./configs/docker.config
