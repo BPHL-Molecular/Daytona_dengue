@@ -18,6 +18,10 @@ SLURM is needed if you plan use slurm to load the pipeline to run at high perfor
 ## Before running
 If the referene genomes donot have index, using below command to generate their index files and to put them in the same directory before running the pipeline.
 ```bash
+bwa index <full path to your genome fasta file> 
+```
+Or
+```bash
 singularity exec docker://staphb/bwa:0.7.17 bwa index <full path to your genome fasta file> 
 ```
          
