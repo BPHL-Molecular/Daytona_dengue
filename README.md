@@ -31,7 +31,7 @@ docker run staphb/bwa:0.7.17 bwa index <full path to your genome fasta file>
 ## How to run
 ### By default: 
 By default, the pipeline uses singularity to run containers and is wrapped by SLURM. To run the pipeline by default, you should follow the steps below.
-1. put your data files into directory /fastqs. Your data file's name should look like "JBS22002292_1.fastq.gz", "JBS22002292_2.fastq.gz".
+1. put your data files into directory /fastqs. Your data file's name should look like "JBS22002292_1.fastq.gz", "JBS22002292_2.fastq.gz". You may use the bash script "renamefile.sh" to rename your data file names.
 2. open file "parames.yaml", set the parameters. 
 3. get into the top of the pipeline directory, then run 
 ```bash
@@ -39,7 +39,7 @@ sbatch ./daytona_dengue.sh
 ```
 Note: the sbatch parameters setting is based on our cluser HiPerGator at University of Florida campus. You maybe need change them according to your cluster's configuration.
 ### By Singularity
-1. put your data files into directory /fastqs. Your data file's name should look like "JBS22002292_1.fastq.gz", "JBS22002292_2.fastq.gz".
+1. put your data files into directory /fastqs. Your data file's name should look like "JBS22002292_1.fastq.gz", "JBS22002292_2.fastq.gz". You may use the bash script "renamefile.sh" to rename your data file names.
 2. open file "parames.yaml", set the parameters. 
 3. get into the top of the pipeline directory, then run 
 ```bash
@@ -49,7 +49,7 @@ bash ./kraken2_viral.sh
 nextflow run daytona_dengue.nf -params-file params.yaml -c ./configs/singularity.config
 ``` 
 ### By Docker: 
-1. put your data files into directory /fastqs. Your data file's name should look like "JBS22002292_1.fastq.gz", "JBS22002292_2.fastq.gz".
+1. put your data files into directory /fastqs. Your data file's name should look like "JBS22002292_1.fastq.gz", "JBS22002292_2.fastq.gz". You may use the bash script "renamefile.sh" to rename your data file names.
 2. open file "parames.yaml", set the parameters. 
 3. get into the top of the pipeline directory, then run 
 ```bash
