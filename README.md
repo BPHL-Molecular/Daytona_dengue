@@ -48,6 +48,9 @@ bash ./kraken2_viral.sh
 ```bash
 nextflow run daytona_dengue.nf -params-file params.yaml -c ./configs/singularity.config
 ``` 
+```bash
+bash ./report_output.sh
+```
 ### By Docker: 
 1. put your data files into directory /fastqs. Your data file's name should look like "JBS22002292_1.fastq.gz", "JBS22002292_2.fastq.gz". You may use the bash script "renamefile.sh" to rename your data file names.
 2. open file "parames.yaml", set the parameters. 
@@ -57,6 +60,9 @@ bash ./kraken2_viral.sh
 ```
 ```bash
 nextflow run daytona_dengue.nf -params-file params.yaml -c ./configs/docker.config
+```
+```bash
+bash ./report_output.sh
 ```
 ## Results
 All results can be found in the directory /output.
