@@ -29,3 +29,5 @@ mv ./kraken_out_broad ./output/
 
 #cat ./output/assemblies/*.fa > ./output/assemblies.fasta
 #singularity exec /apps/staphb-toolkit/containers/nextclade_2021-03-15.sif nextclade --input-fasta ./output/assemblies.fasta --output-csv ./output/nextclade_report.csv
+
+python3 ./table.py
