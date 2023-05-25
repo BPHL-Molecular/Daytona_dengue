@@ -19,11 +19,11 @@ with open(report, 'r') as report:
   
   for aline in datalines:
     linecells = aline.split("\t")
-    subcells = linecells[0].split("_")
-    linecells[0] = subcells[1]
+    #subcells = linecells[0].split("_")
+    #linecells[0] = subcells[1]
     for seroline in serolines:
       seroline = seroline.strip()
-      if subcells[1] in seroline:
+      if linecells[0] in seroline:
         serocells = seroline.split(",")
         linecells.insert(1,serocells[1])
         linecells.insert(2,serocells[2])

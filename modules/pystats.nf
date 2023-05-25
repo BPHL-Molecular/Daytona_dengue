@@ -91,9 +91,14 @@ process pystats {
               qc_flag = qc_flag + 'PASS'
        #print(qc_flag)
     
+       idname = "${samplename}".lstrip("SER1_")
+
        if qc_flag == 'PASS':
-           subprocess.run("cp "+filepath2+" "+"${params.output}"+"/dengue1/assemblies/", shell=True, check=True)   
-           subprocess.run('cp ' + "${params.output}"+"/dengue1/"+"${samplename}" + '/variants/'+"${samplename}" + '.variants.tsv ' + "${params.output}"+'/dengue1/variants/', shell=True, check=True)
+             
+           subprocess.run("cp "+filepath2+" "+"${params.output}"+"/dengue1/assemblies/"+idname+".consensus.fa", shell=True, check=True)   
+           subprocess.run('cp ' + "${params.output}"+"/dengue1/"+"${samplename}" + '/variants/'+"${samplename}" + '.variants.tsv ' + "${params.output}"+'/dengue1/variants/'+idname+'.variants.tsv', shell=True, check=True)
+    
+           
     
            #Run VADR
            out_log = open("${params.output}"+"/dengue1/"+"${samplename}"+"/"+"${samplename}"+'.out', 'w')
@@ -131,7 +136,7 @@ process pystats {
        with open("${params.output}"+"/dengue1/"+"${samplename}"+"/report.txt", 'w') as report:
            header = ['sampleID', 'reference', 'start', 'end', 'num_raw_reads', 'num_clean_reads', 'num_mapped_reads', 'percent_mapped_clean_reads', 'cov_bases_mapped', 'percent_genome_cov_map', 'mean_depth', 'mean_base_qual', 'mean_map_qual', 'assembly_length', 'numN', 'percent_ref_genome_cov', 'VADR_flag', 'QC_flag']
            report.write('\t'.join(map(str,header)) + '\n')
-           results = ["${samplename}", ref_name, start, end, raw_reads, clean_reads, reads_mapped, percent_map, cov_bases, cov, depth, baseq, mapq, num_bases, ns, pg, vadr_flag, qc_flag]
+           results = [idname, ref_name, start, end, raw_reads, clean_reads, reads_mapped, percent_map, cov_bases, cov, depth, baseq, mapq, num_bases, ns, pg, vadr_flag, qc_flag]
            report.write('\t'.join(map(str,results)) + '\n')
        
 
@@ -214,10 +219,11 @@ process pystats {
            if qc_flag == '':
               qc_flag = qc_flag + 'PASS'
        #print(qc_flag)
-    
-       if qc_flag == 'PASS':
-           subprocess.run("cp "+filepath2+" "+"${params.output}"+"/dengue2/assemblies/", shell=True, check=True)   
-           subprocess.run('cp ' + "${params.output}"+"/dengue2/"+"${samplename}" + '/variants/'+"${samplename}" + '.variants.tsv ' + "${params.output}"+'/dengue2/variants/', shell=True, check=True)
+       
+       idname = "${samplename}".lstrip("SER2_")
+       if qc_flag == 'PASS':          
+           subprocess.run("cp "+filepath2+" "+"${params.output}"+"/dengue2/assemblies/"+idname+".consensus.fa", shell=True, check=True)   
+           subprocess.run('cp ' + "${params.output}"+"/dengue2/"+"${samplename}" + '/variants/'+"${samplename}" + '.variants.tsv ' + "${params.output}"+'/dengue2/variants/'+idname+'.variants.tsv', shell=True, check=True)
     
            #Run VADR
            out_log = open("${params.output}"+"/dengue2/"+"${samplename}"+"/"+"${samplename}"+'.out', 'w')
@@ -255,7 +261,7 @@ process pystats {
        with open("${params.output}"+"/dengue2/"+"${samplename}"+"/report.txt", 'w') as report:
            header = ['sampleID', 'reference', 'start', 'end', 'num_raw_reads', 'num_clean_reads', 'num_mapped_reads', 'percent_mapped_clean_reads', 'cov_bases_mapped', 'percent_genome_cov_map', 'mean_depth', 'mean_base_qual', 'mean_map_qual', 'assembly_length', 'numN', 'percent_ref_genome_cov', 'VADR_flag', 'QC_flag']
            report.write('\t'.join(map(str,header)) + '\n')
-           results = ["${samplename}", ref_name, start, end, raw_reads, clean_reads, reads_mapped, percent_map, cov_bases, cov, depth, baseq, mapq, num_bases, ns, pg, vadr_flag, qc_flag]
+           results = [idname, ref_name, start, end, raw_reads, clean_reads, reads_mapped, percent_map, cov_bases, cov, depth, baseq, mapq, num_bases, ns, pg, vadr_flag, qc_flag]
            report.write('\t'.join(map(str,results)) + '\n')
 
 
@@ -338,10 +344,11 @@ process pystats {
            if qc_flag == '':
               qc_flag = qc_flag + 'PASS'
        #print(qc_flag)
-    
-       if qc_flag == 'PASS':
-           subprocess.run("cp "+filepath2+" "+"${params.output}"+"/dengue3/assemblies/", shell=True, check=True)   
-           subprocess.run('cp ' + "${params.output}"+"/dengue3/"+"${samplename}" + '/variants/'+"${samplename}" + '.variants.tsv ' + "${params.output}"+'/dengue3/variants/', shell=True, check=True)
+       
+       idname = "${samplename}".lstrip("SER3_")
+       if qc_flag == 'PASS':           
+           subprocess.run("cp "+filepath2+" "+"${params.output}"+"/dengue3/assemblies/"+idname+".consensus.fa", shell=True, check=True)   
+           subprocess.run('cp ' + "${params.output}"+"/dengue3/"+"${samplename}" + '/variants/'+"${samplename}" + '.variants.tsv ' + "${params.output}"+'/dengue3/variants/'+idname+'.variants.tsv', shell=True, check=True)
     
            #Run VADR
            out_log = open("${params.output}"+"/dengue3/"+"${samplename}"+"/"+"${samplename}"+'.out', 'w')
@@ -379,7 +386,7 @@ process pystats {
        with open("${params.output}"+"/dengue3/"+"${samplename}"+"/report.txt", 'w') as report:
            header = ['sampleID', 'reference', 'start', 'end', 'num_raw_reads', 'num_clean_reads', 'num_mapped_reads', 'percent_mapped_clean_reads', 'cov_bases_mapped', 'percent_genome_cov_map', 'mean_depth', 'mean_base_qual', 'mean_map_qual', 'assembly_length', 'numN', 'percent_ref_genome_cov', 'VADR_flag', 'QC_flag']
            report.write('\t'.join(map(str,header)) + '\n')
-           results = ["${samplename}", ref_name, start, end, raw_reads, clean_reads, reads_mapped, percent_map, cov_bases, cov, depth, baseq, mapq, num_bases, ns, pg, vadr_flag, qc_flag]
+           results = [idname, ref_name, start, end, raw_reads, clean_reads, reads_mapped, percent_map, cov_bases, cov, depth, baseq, mapq, num_bases, ns, pg, vadr_flag, qc_flag]
            report.write('\t'.join(map(str,results)) + '\n')
 
 
@@ -462,10 +469,11 @@ process pystats {
            if qc_flag == '':
               qc_flag = qc_flag + 'PASS'
        #print(qc_flag)
-    
-       if qc_flag == 'PASS':
-           subprocess.run("cp "+filepath2+" "+"${params.output}"+"/dengue4/assemblies/", shell=True, check=True)   
-           subprocess.run('cp ' + "${params.output}"+"/dengue4/"+"${samplename}" + '/variants/'+"${samplename}" + '.variants.tsv ' + "${params.output}"+'/dengue4/variants/', shell=True, check=True)
+       
+       idname = "${samplename}".lstrip("SER4_")
+       if qc_flag == 'PASS':      
+           subprocess.run("cp "+filepath2+" "+"${params.output}"+"/dengue4/assemblies/"+idname+".consensus.fa", shell=True, check=True)   
+           subprocess.run('cp ' + "${params.output}"+"/dengue4/"+"${samplename}" + '/variants/'+"${samplename}" + '.variants.tsv ' + "${params.output}"+'/dengue4/variants/'+idname+'.variants.tsv', shell=True, check=True)
     
            #Run VADR
            out_log = open("${params.output}"+"/dengue4/"+"${samplename}"+"/"+"${samplename}"+'.out', 'w')
@@ -503,7 +511,7 @@ process pystats {
        with open("${params.output}"+"/dengue4/"+"${samplename}"+"/report.txt", 'w') as report:
            header = ['sampleID', 'reference', 'start', 'end', 'num_raw_reads', 'num_clean_reads', 'num_mapped_reads', 'percent_mapped_clean_reads', 'cov_bases_mapped', 'percent_genome_cov_map', 'mean_depth', 'mean_base_qual', 'mean_map_qual', 'assembly_length', 'numN', 'percent_ref_genome_cov', 'VADR_flag', 'QC_flag']
            report.write('\t'.join(map(str,header)) + '\n')
-           results = ["${samplename}", ref_name, start, end, raw_reads, clean_reads, reads_mapped, percent_map, cov_bases, cov, depth, baseq, mapq, num_bases, ns, pg, vadr_flag, qc_flag]
+           results = [idname, ref_name, start, end, raw_reads, clean_reads, reads_mapped, percent_map, cov_bases, cov, depth, baseq, mapq, num_bases, ns, pg, vadr_flag, qc_flag]
            report.write('\t'.join(map(str,results)) + '\n')
 
     else:
