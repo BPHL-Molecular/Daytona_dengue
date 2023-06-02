@@ -31,3 +31,25 @@ mv ./kraken_out_broad ./output/
 #singularity exec /apps/staphb-toolkit/containers/nextclade_2021-03-15.sif nextclade --input-fasta ./output/assemblies.fasta --output-csv ./output/nextclade_report.csv
 
 python3 ./table.py
+
+mkdir ./output/fastqc ./output/humanscrubber ./output/bbduk ./output/fastqc_clean ./output/multiqc ./output/alignment ./output/variant ./output/assembly ./output/assembly_qc_pass ./output/variant_qc_pass ./output/report
+mv ./output/dengue*/*/*original_fastqc* ./output/fastqc
+mv ./output/dengue*/*/*humanclean.fastq* ./output/humanscrubber
+mv ./output/dengue*/*/*fq.gz ./output/bbduk
+mv ./output/dengue*/*/*clean_fastqc* ./output/fastqc_clean
+mv ./output/dengue*/*/*multiqc_data ./output/multiqc
+mv ./output/dengue*/*/alignment/* ./output/alignment
+mv ./output/dengue*/SER*/variants/* ./output/variant
+mv ./output/dengue*/SER*/assembly/SER* ./output/assembly
+mv ./output/dengue*/assemblies/* ./output/assembly_qc_pass
+mv ./output/dengue*/variants/* ./output/variant_qc_pass
+#mv ./output/dengue*/*/assembly/*vadr_results ./output/vadr_results
+mv ./output/final_report.txt ./output/report
+mv ./output/Serotypes.txt ./output/report
+rm -r ./output/dengue* ./output/sum_report.txt samples.txt ai
+
+for i in ./output/*/SER*
+do
+   mv "$i" "${i/SER[1-4]_/}"
+  
+done
