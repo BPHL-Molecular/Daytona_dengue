@@ -1,7 +1,7 @@
 
 report = "./output/sum_report.txt"
 seroreport = "./output/Serotypes.txt"
-finalreport = "./output/final_reprot.txt"
+finalreport = "./output/final_report.txt"
 with open(report, 'r') as report:
 
   head = report.readline()

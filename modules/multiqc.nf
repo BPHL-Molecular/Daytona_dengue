@@ -17,7 +17,7 @@ process multiqc {
 
       #Map reads to reference
       mkdir ${params.output}/dengue1/${x}/alignment
-
+      mv ${params.output}/dengue1/${x}/multiqc_data ${params.output}/dengue1/${x}/${x}_multiqc_data 
       
    elif [[ ${x} =~ SER2_ ]];then
       #Run multiqc
@@ -25,7 +25,7 @@ process multiqc {
 
       #Map reads to reference
       mkdir ${params.output}/dengue2/${x}/alignment
-
+      mv ${params.output}/dengue2/${x}/multiqc_data ${params.output}/dengue2/${x}/${x}_multiqc_data
       
    elif [[ ${x} =~ SER3_ ]];then
       #Run multiqc
@@ -33,7 +33,7 @@ process multiqc {
 
       #Map reads to reference
       mkdir ${params.output}/dengue3/${x}/alignment
-
+      mv ${params.output}/dengue3/${x}/multiqc_data ${params.output}/dengue3/${x}/${x}_multiqc_data
       
    elif [[ ${x} =~ SER4_ ]];then
       #Run multiqc
@@ -41,7 +41,7 @@ process multiqc {
 
       #Map reads to reference
       mkdir ${params.output}/dengue4/${x}/alignment
-
+      mv ${params.output}/dengue4/${x}/multiqc_data ${params.output}/dengue4/${x}/${x}_multiqc_data
    else
       echo "No serotyped sequence is in fastqs folder"
    fi

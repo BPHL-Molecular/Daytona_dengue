@@ -1,0 +1,264 @@
+Jun-02 15:58:20.942 [main] DEBUG nextflow.cli.Launcher - $> nextflow run daytona_dengue.nf -params-file params.yaml
+Jun-02 15:58:21.078 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 21.10.6
+Jun-02 15:58:21.121 [main] INFO  nextflow.cli.CmdRun - Launching `daytona_dengue.nf` [furious_allen] - revision: 530c185de9
+Jun-02 15:58:21.139 [main] DEBUG nextflow.config.ConfigBuilder - Found config local: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/nextflow.config
+Jun-02 15:58:21.140 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/nextflow.config
+Jun-02 15:58:21.202 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `standard`
+Jun-02 15:58:22.370 [main] DEBUG nextflow.plugin.PluginsFacade - Setting up plugin manager > mode=prod; plugins-dir=/home/dongyibo/.nextflow/plugins
+Jun-02 15:58:22.377 [main] DEBUG nextflow.plugin.PluginsFacade - Plugins default=[]
+Jun-02 15:58:22.392 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Enabled plugins: []
+Jun-02 15:58:22.396 [main] INFO  org.pf4j.DefaultPluginStatusProvider - Disabled plugins: []
+Jun-02 15:58:22.400 [main] INFO  org.pf4j.DefaultPluginManager - PF4J version 3.4.1 in 'deployment' mode
+Jun-02 15:58:22.427 [main] INFO  org.pf4j.AbstractPluginManager - No plugins
+Jun-02 15:58:22.481 [main] DEBUG nextflow.Session - Session uuid: 2f0ff3bc-d440-42f7-a8d2-d3e8f1352165
+Jun-02 15:58:22.481 [main] DEBUG nextflow.Session - Run name: furious_allen
+Jun-02 15:58:22.482 [main] DEBUG nextflow.Session - Executor pool size: 25
+Jun-02 15:58:22.501 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 21.10.6 build 5660
+  Created: 21-12-2021 16:55 UTC (11:55 EDT)
+  System: Linux 3.10.0-1160.88.1.el7.x86_64
+  Runtime: Groovy 3.0.9 on OpenJDK 64-Bit Server VM 1.8.0_312-b07
+  Encoding: UTF-8 (UTF-8)
+  Process: 82408@c0700a-s13.ufhpc [172.16.201.13]
+  CPUs: 25 - Mem: 100 GB (66.7 GB) - Swap: 0 (0)
+Jun-02 15:58:24.530 [main] DEBUG nextflow.Session - Work-dir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work [lustre]
+Jun-02 15:58:24.531 [main] DEBUG nextflow.Session - Script base path does not exist or is not a directory: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/bin
+Jun-02 15:58:24.541 [main] DEBUG nextflow.executor.ExecutorFactory - Extension executors providers=[]
+Jun-02 15:58:24.551 [main] DEBUG nextflow.Session - Observer factory: DefaultObserverFactory
+Jun-02 15:58:24.602 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 26; maxThreads: 1000
+Jun-02 15:58:25.200 [main] DEBUG nextflow.Session - Session start invoked
+Jun-02 15:58:25.505 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Jun-02 15:58:25.612 [main] INFO  nextflow.script.BaseScript - SER1_TVU19000568
+Jun-02 15:58:25.616 [main] INFO  nextflow.script.BaseScript - SER2_TVA19000312
+Jun-02 15:58:25.616 [main] INFO  nextflow.script.BaseScript - SER3_TVU22001339
+Jun-02 15:58:25.616 [main] INFO  nextflow.script.BaseScript - SER4_TVU19000554
+Jun-02 15:58:27.016 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:fastqc` matches process fastqc
+Jun-02 15:58:27.023 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-02 15:58:27.023 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-02 15:58:27.028 [main] DEBUG nextflow.executor.Executor - [warm up] executor > local
+Jun-02 15:58:27.033 [main] DEBUG n.processor.LocalPollingMonitor - Creating local task monitor for executor 'local' > cpus=25; memory=100 GB; capacity=25; pollInterval=100ms; dumpInterval=5m
+Jun-02 15:58:27.052 [main] DEBUG nextflow.util.CustomThreadPool - Creating default thread pool > poolSize: 26; maxThreads: 1000
+Jun-02 15:58:27.244 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:humanscrubber` matches process humanscrubber
+Jun-02 15:58:27.245 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-02 15:58:27.245 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-02 15:58:27.249 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:trimmomatic` matches process trimmomatic
+Jun-02 15:58:27.250 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-02 15:58:27.250 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-02 15:58:27.258 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:bbduk` matches process bbduk
+Jun-02 15:58:27.259 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-02 15:58:27.259 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-02 15:58:27.263 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:fastqc_clean` matches process fastqc_clean
+Jun-02 15:58:27.263 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-02 15:58:27.263 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-02 15:58:27.267 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:multiqc` matches process multiqc
+Jun-02 15:58:27.268 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-02 15:58:27.268 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-02 15:58:27.271 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:frag_bwa` matches process frag_bwa
+Jun-02 15:58:27.271 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-02 15:58:27.271 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-02 15:58:27.275 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:frag_samtools` matches process frag_samtools
+Jun-02 15:58:27.275 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-02 15:58:27.275 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-02 15:58:27.280 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:primer_trim_ivar` matches process primer_trim_ivar
+Jun-02 15:58:27.281 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-02 15:58:27.281 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-02 15:58:27.284 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:primer_trim_samtools` matches process primer_trim_samtools
+Jun-02 15:58:27.284 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-02 15:58:27.285 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-02 15:58:27.287 [main] DEBUG nextflow.script.ProcessConfig - Config settings `withName:assembly` matches process assembly
+Jun-02 15:58:27.288 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-02 15:58:27.288 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-02 15:58:27.293 [main] DEBUG nextflow.executor.ExecutorFactory - << taskConfig executor: null
+Jun-02 15:58:27.293 [main] DEBUG nextflow.executor.ExecutorFactory - >> processorType: 'local'
+Jun-02 15:58:27.315 [main] DEBUG nextflow.Session - Workflow process names [dsl2]: trimmomatic, frag_bwa, humanscrubber, fastqc, primer_trim_ivar, fastqc_clean, assembly, bbduk, pystats, multiqc, frag_samtools, primer_trim_samtools
+Jun-02 15:58:27.317 [main] DEBUG nextflow.Session - Ignite dataflow network (13)
+Jun-02 15:58:27.318 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > fastqc
+Jun-02 15:58:27.318 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > humanscrubber
+Jun-02 15:58:27.319 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > trimmomatic
+Jun-02 15:58:27.319 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > bbduk
+Jun-02 15:58:27.319 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > fastqc_clean
+Jun-02 15:58:27.321 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > multiqc
+Jun-02 15:58:27.322 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > frag_bwa
+Jun-02 15:58:27.324 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > frag_samtools
+Jun-02 15:58:27.324 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > primer_trim_ivar
+Jun-02 15:58:27.324 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > primer_trim_samtools
+Jun-02 15:58:27.325 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > assembly
+Jun-02 15:58:27.326 [main] DEBUG nextflow.processor.TaskProcessor - Starting process > pystats
+Jun-02 15:58:27.327 [main] DEBUG nextflow.script.ScriptRunner - > Await termination 
+Jun-02 15:58:27.327 [main] DEBUG nextflow.Session - Session await
+Jun-02 15:58:27.423 [Actor Thread 19] WARN  nextflow.container.SingularityCache - Singularity cache directory has not been defined -- Remote image will be stored in the path: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/singularity -- Use env variable NXF_SINGULARITY_CACHEDIR to specify a different location
+Jun-02 15:58:27.425 [Actor Thread 19] INFO  nextflow.container.SingularityCache - Pulling Singularity image docker://staphb/fastqc:0.11.9 [cache /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/singularity/staphb-fastqc-0.11.9.img]
+Jun-02 15:58:28.432 [Actor Thread 19] DEBUG nextflow.container.SingularityCache - Singularity pull complete image=docker://staphb/fastqc:0.11.9 path=/blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/singularity/staphb-fastqc-0.11.9.img
+Jun-02 15:58:28.567 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 15:58:28.571 [Task submitter] INFO  nextflow.Session - [c4/dc1c5f] Submitted process > fastqc (3)
+Jun-02 15:58:28.582 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 15:58:28.584 [Task submitter] INFO  nextflow.Session - [a2/03a23f] Submitted process > fastqc (2)
+Jun-02 15:58:28.600 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 15:58:28.600 [Task submitter] INFO  nextflow.Session - [ff/59f0ab] Submitted process > fastqc (4)
+Jun-02 15:58:28.836 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 15:58:28.837 [Task submitter] INFO  nextflow.Session - [7d/6dd7f9] Submitted process > fastqc (1)
+Jun-02 15:58:39.864 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 4; name: fastqc (3); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/c4/dc1c5f89849b4e3218fd2751c7aedd]
+Jun-02 15:58:39.892 [Actor Thread 29] INFO  nextflow.container.SingularityCache - Pulling Singularity image docker://ncbi/sra-human-scrubber:1.1.2021-05-05 [cache /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/singularity/ncbi-sra-human-scrubber-1.1.2021-05-05.img]
+Jun-02 15:58:41.918 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 1; name: fastqc (1); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/7d/6dd7f9a77afccb2c44097a8ca40861]
+Jun-02 15:58:42.749 [Actor Thread 29] DEBUG nextflow.container.SingularityCache - Singularity pull complete image=docker://ncbi/sra-human-scrubber:1.1.2021-05-05 path=/blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/singularity/ncbi-sra-human-scrubber-1.1.2021-05-05.img
+Jun-02 15:58:42.785 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 15:58:42.785 [Task submitter] INFO  nextflow.Session - [b4/936987] Submitted process > humanscrubber (1)
+Jun-02 15:58:42.793 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 15:58:42.793 [Task submitter] INFO  nextflow.Session - [1a/f459f4] Submitted process > humanscrubber (2)
+Jun-02 15:58:43.011 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 3; name: fastqc (4); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/ff/59f0abead0f07fbf0fdd6d5fb91020]
+Jun-02 15:58:43.063 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 15:58:43.155 [Task submitter] INFO  nextflow.Session - [bb/d245a6] Submitted process > humanscrubber (3)
+Jun-02 15:58:43.156 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 2; name: fastqc (2); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/a2/03a23fc6d27c87ae3b9470dc0f553c]
+Jun-02 15:58:43.260 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 15:58:43.261 [Task submitter] INFO  nextflow.Session - [b9/dd39f1] Submitted process > humanscrubber (4)
+Jun-02 15:59:16.424 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 5; name: humanscrubber (1); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/b4/936987cda36d00ce213c74929fbca0]
+Jun-02 15:59:16.441 [Actor Thread 42] INFO  nextflow.container.SingularityCache - Pulling Singularity image docker://staphb/trimmomatic:0.39 [cache /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/singularity/staphb-trimmomatic-0.39.img]
+Jun-02 15:59:17.651 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 6; name: humanscrubber (2); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/1a/f459f49520343f79aed682819a380d]
+Jun-02 15:59:18.299 [Actor Thread 42] DEBUG nextflow.container.SingularityCache - Singularity pull complete image=docker://staphb/trimmomatic:0.39 path=/blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/singularity/staphb-trimmomatic-0.39.img
+Jun-02 15:59:18.333 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 15:59:18.334 [Task submitter] INFO  nextflow.Session - [80/31a803] Submitted process > trimmomatic (2)
+Jun-02 15:59:18.555 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 15:59:18.556 [Task submitter] INFO  nextflow.Session - [31/1154b4] Submitted process > trimmomatic (1)
+Jun-02 15:59:19.799 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 8; name: humanscrubber (4); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/b9/dd39f12e8f58e1c243664ac486f886]
+Jun-02 15:59:20.667 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 15:59:20.667 [Task submitter] INFO  nextflow.Session - [bf/250649] Submitted process > trimmomatic (3)
+Jun-02 15:59:20.954 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 7; name: humanscrubber (3); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/bb/d245a6cc886ec2fbe4e4f79928df0b]
+Jun-02 15:59:20.970 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 15:59:20.971 [Task submitter] INFO  nextflow.Session - [46/65e4a6] Submitted process > trimmomatic (4)
+Jun-02 15:59:51.864 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 9; name: trimmomatic (1); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/31/1154b4e8cbb3e94489fea8e61beedc]
+Jun-02 15:59:51.873 [Actor Thread 33] WARN  nextflow.container.SingularityCache - Singularity cache directory has not been defined -- Remote image will be stored in the path: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/singularity -- Use env variable NXF_SINGULARITY_CACHEDIR to specify a different location
+Jun-02 15:59:51.873 [Actor Thread 33] INFO  nextflow.container.SingularityCache - Pulling Singularity image docker://staphb/bbtools:38.76 [cache /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/singularity/staphb-bbtools-38.76.img]
+Jun-02 15:59:53.010 [Actor Thread 33] DEBUG nextflow.container.SingularityCache - Singularity pull complete image=docker://staphb/bbtools:38.76 path=/blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/singularity/staphb-bbtools-38.76.img
+Jun-02 15:59:53.291 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 15:59:53.292 [Task submitter] INFO  nextflow.Session - [0b/11915a] Submitted process > bbduk (1)
+Jun-02 15:59:56.296 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 10; name: trimmomatic (2); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/80/31a8036dd18211a2ae631228895a2c]
+Jun-02 15:59:56.329 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 15:59:56.329 [Task submitter] INFO  nextflow.Session - [06/5148f6] Submitted process > bbduk (2)
+Jun-02 16:00:00.265 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 12; name: trimmomatic (4); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/46/65e4a65fe3d0916a492564c1527122]
+Jun-02 16:00:00.294 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 11; name: trimmomatic (3); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/bf/2506493b83582fe845277ce71e6ebc]
+Jun-02 16:00:00.305 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:00:00.305 [Task submitter] INFO  nextflow.Session - [1f/bae919] Submitted process > bbduk (3)
+Jun-02 16:00:00.321 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:00:00.322 [Task submitter] INFO  nextflow.Session - [36/056a1a] Submitted process > bbduk (4)
+Jun-02 16:00:00.713 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 13; name: bbduk (1); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/0b/11915abb6840ee085f05b66582c445]
+Jun-02 16:00:00.742 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:00:00.743 [Task submitter] INFO  nextflow.Session - [cd/846a58] Submitted process > fastqc_clean (1)
+Jun-02 16:00:05.411 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 14; name: bbduk (2); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/06/5148f62e7a9e1ae2ade3c3750a0d74]
+Jun-02 16:00:05.445 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:00:05.446 [Task submitter] INFO  nextflow.Session - [a5/5385e9] Submitted process > fastqc_clean (2)
+Jun-02 16:00:07.410 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 15; name: bbduk (3); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/1f/bae919f925b7475da1dfa585358bed]
+Jun-02 16:00:07.426 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:00:07.426 [Task submitter] INFO  nextflow.Session - [8e/f1e551] Submitted process > fastqc_clean (3)
+Jun-02 16:00:08.419 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 16; name: bbduk (4); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/36/056a1ab9b02ad1100f4cb44d8969ca]
+Jun-02 16:00:08.432 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:00:08.433 [Task submitter] INFO  nextflow.Session - [56/5e9df9] Submitted process > fastqc_clean (4)
+Jun-02 16:00:11.785 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 17; name: fastqc_clean (1); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/cd/846a580bfb44b69b513e7fddd17681]
+Jun-02 16:00:11.792 [Actor Thread 33] INFO  nextflow.container.SingularityCache - Pulling Singularity image docker://staphb/multiqc:1.8 [cache /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/singularity/staphb-multiqc-1.8.img]
+Jun-02 16:00:13.928 [Actor Thread 33] DEBUG nextflow.container.SingularityCache - Singularity pull complete image=docker://staphb/multiqc:1.8 path=/blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/singularity/staphb-multiqc-1.8.img
+Jun-02 16:00:13.956 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:00:13.957 [Task submitter] INFO  nextflow.Session - [2f/5e525f] Submitted process > multiqc (1)
+Jun-02 16:00:15.574 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 18; name: fastqc_clean (2); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/a5/5385e94888091009a2063ba984e868]
+Jun-02 16:00:15.585 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:00:15.585 [Task submitter] INFO  nextflow.Session - [a4/d1d22d] Submitted process > multiqc (2)
+Jun-02 16:00:17.397 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 21; name: multiqc (1); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/2f/5e525f73a220097aaa025e033971cf]
+Jun-02 16:00:17.403 [Actor Thread 33] INFO  nextflow.container.SingularityCache - Pulling Singularity image docker://staphb/bwa:0.7.17 [cache /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/singularity/staphb-bwa-0.7.17.img]
+Jun-02 16:00:17.552 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 19; name: fastqc_clean (3); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/8e/f1e551698736dca232d9ff2a719c7a]
+Jun-02 16:00:17.562 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:00:17.562 [Task submitter] INFO  nextflow.Session - [d1/111857] Submitted process > multiqc (3)
+Jun-02 16:00:17.880 [Actor Thread 33] DEBUG nextflow.container.SingularityCache - Singularity pull complete image=docker://staphb/bwa:0.7.17 path=/blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/singularity/staphb-bwa-0.7.17.img
+Jun-02 16:00:17.903 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:00:17.903 [Task submitter] INFO  nextflow.Session - [6f/0bd91b] Submitted process > frag_bwa (1)
+Jun-02 16:00:19.415 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 20; name: fastqc_clean (4); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/56/5e9df92db1a50e454f9fbadd352407]
+Jun-02 16:00:19.427 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:00:19.428 [Task submitter] INFO  nextflow.Session - [6b/0ad5f4] Submitted process > multiqc (4)
+Jun-02 16:00:19.660 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 22; name: multiqc (2); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/a4/d1d22d9224ebb93851ea2b1bd4afc3]
+Jun-02 16:00:19.670 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:00:19.670 [Task submitter] INFO  nextflow.Session - [40/e76eb6] Submitted process > frag_bwa (2)
+Jun-02 16:00:20.749 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 24; name: multiqc (3); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/d1/1118570f21b5aea361e5a1490e5d08]
+Jun-02 16:00:20.777 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:00:20.778 [Task submitter] INFO  nextflow.Session - [41/b1254e] Submitted process > frag_bwa (3)
+Jun-02 16:00:22.262 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 25; name: multiqc (4); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/6b/0ad5f4e58f61aa0d35693036c4ae41]
+Jun-02 16:00:22.274 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:00:22.274 [Task submitter] INFO  nextflow.Session - [70/1b337c] Submitted process > frag_bwa (4)
+Jun-02 16:01:12.117 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 23; name: frag_bwa (1); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/6f/0bd91b278b93ea991a26051695118a]
+Jun-02 16:01:12.139 [Actor Thread 39] WARN  nextflow.container.SingularityCache - Singularity cache directory has not been defined -- Remote image will be stored in the path: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/singularity -- Use env variable NXF_SINGULARITY_CACHEDIR to specify a different location
+Jun-02 16:01:12.140 [Actor Thread 39] INFO  nextflow.container.SingularityCache - Pulling Singularity image docker://staphb/samtools:1.12 [cache /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/singularity/staphb-samtools-1.12.img]
+Jun-02 16:01:12.993 [Actor Thread 39] DEBUG nextflow.container.SingularityCache - Singularity pull complete image=docker://staphb/samtools:1.12 path=/blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/singularity/staphb-samtools-1.12.img
+Jun-02 16:01:13.054 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:01:13.055 [Task submitter] INFO  nextflow.Session - [07/7fbd62] Submitted process > frag_samtools (1)
+Jun-02 16:01:13.955 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 27; name: frag_bwa (3); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/41/b1254ed64dff2bd6bf0d36386ba38a]
+Jun-02 16:01:13.968 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:01:13.968 [Task submitter] INFO  nextflow.Session - [73/8da737] Submitted process > frag_samtools (2)
+Jun-02 16:01:30.600 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 26; name: frag_bwa (2); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/40/e76eb68e5983161fb0d130033b59bd]
+Jun-02 16:01:30.626 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:01:30.627 [Task submitter] INFO  nextflow.Session - [c8/8c552f] Submitted process > frag_samtools (3)
+Jun-02 16:01:48.870 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 28; name: frag_bwa (4); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/70/1b337ce809741ca4114bac98366f3b]
+Jun-02 16:01:48.903 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:01:48.904 [Task submitter] INFO  nextflow.Session - [04/dea4de] Submitted process > frag_samtools (4)
+Jun-02 16:01:52.471 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 29; name: frag_samtools (1); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/07/7fbd6205b6e8efbb6d1846be8b387b]
+Jun-02 16:01:52.508 [Actor Thread 33] INFO  nextflow.container.SingularityCache - Pulling Singularity image docker://staphb/ivar [cache /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/singularity/staphb-ivar.img]
+Jun-02 16:01:54.565 [Actor Thread 33] DEBUG nextflow.container.SingularityCache - Singularity pull complete image=docker://staphb/ivar path=/blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/singularity/staphb-ivar.img
+Jun-02 16:01:54.640 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:01:54.641 [Task submitter] INFO  nextflow.Session - [2b/5c8630] Submitted process > primer_trim_ivar (1)
+Jun-02 16:02:00.100 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 30; name: frag_samtools (2); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/73/8da7379a145b268587a3f8133dea07]
+Jun-02 16:02:00.119 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:02:00.120 [Task submitter] INFO  nextflow.Session - [c0/52b7e5] Submitted process > primer_trim_ivar (2)
+Jun-02 16:02:06.888 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 33; name: primer_trim_ivar (1); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/2b/5c86306d78c448d6cc09d31ab205ec]
+Jun-02 16:02:06.910 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:02:06.910 [Task submitter] INFO  nextflow.Session - [2a/57403d] Submitted process > primer_trim_samtools (1)
+Jun-02 16:02:07.779 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 31; name: frag_samtools (3); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/c8/8c552f00882821c4011316ed9862c5]
+Jun-02 16:02:07.803 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:02:07.803 [Task submitter] INFO  nextflow.Session - [b3/147aa9] Submitted process > primer_trim_ivar (3)
+Jun-02 16:02:08.392 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 34; name: primer_trim_ivar (2); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/c0/52b7e57d593aab2597b73ebec0dee0]
+Jun-02 16:02:08.401 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:02:08.402 [Task submitter] INFO  nextflow.Session - [7b/c05d01] Submitted process > primer_trim_samtools (2)
+Jun-02 16:02:14.151 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 36; name: primer_trim_ivar (3); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/b3/147aa9bdb813d86fa6e822cf249466]
+Jun-02 16:02:14.179 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:02:14.179 [Task submitter] INFO  nextflow.Session - [a4/2b0699] Submitted process > primer_trim_samtools (3)
+Jun-02 16:02:18.354 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 35; name: primer_trim_samtools (1); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/2a/57403d849a327c1edc0f28cb171c80]
+Jun-02 16:02:18.378 [Actor Thread 33] WARN  nextflow.container.SingularityCache - Singularity cache directory has not been defined -- Remote image will be stored in the path: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/singularity -- Use env variable NXF_SINGULARITY_CACHEDIR to specify a different location
+Jun-02 16:02:18.383 [Actor Thread 33] INFO  nextflow.container.SingularityCache - Pulling Singularity image docker://staphb/ivar:1.3.2 [cache /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/singularity/staphb-ivar-1.3.2.img]
+Jun-02 16:02:19.158 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 37; name: primer_trim_samtools (2); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/7b/c05d010b7e93bed474916c172e33bb]
+Jun-02 16:02:20.129 [Actor Thread 33] DEBUG nextflow.container.SingularityCache - Singularity pull complete image=docker://staphb/ivar:1.3.2 path=/blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/singularity/staphb-ivar-1.3.2.img
+Jun-02 16:02:20.162 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:02:20.162 [Task submitter] INFO  nextflow.Session - [fa/794013] Submitted process > assembly (2)
+Jun-02 16:02:20.167 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:02:20.168 [Task submitter] INFO  nextflow.Session - [57/0c4bb9] Submitted process > assembly (1)
+Jun-02 16:02:23.561 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 38; name: primer_trim_samtools (3); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/a4/2b0699bacaf6b22f884df14b8721e7]
+Jun-02 16:02:23.569 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:02:23.570 [Task submitter] INFO  nextflow.Session - [b8/32efa0] Submitted process > assembly (3)
+Jun-02 16:02:37.610 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 32; name: frag_samtools (4); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/04/dea4decb594a863c4635068fc2460a]
+Jun-02 16:02:37.623 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:02:37.623 [Task submitter] INFO  nextflow.Session - [c9/15ccb9] Submitted process > primer_trim_ivar (4)
+Jun-02 16:02:45.989 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 42; name: primer_trim_ivar (4); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/c9/15ccb9206e7f24f22396adf898b7cf]
+Jun-02 16:02:46.205 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:02:46.205 [Task submitter] INFO  nextflow.Session - [5f/c9fdf8] Submitted process > primer_trim_samtools (4)
+Jun-02 16:02:55.795 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 43; name: primer_trim_samtools (4); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/5f/c9fdf8b4f244dba859773e1255a4d5]
+Jun-02 16:02:55.812 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:02:55.812 [Task submitter] INFO  nextflow.Session - [cb/092450] Submitted process > assembly (4)
+Jun-02 16:02:56.111 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 41; name: assembly (3); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/b8/32efa05864efd3ef0af9d120004fc0]
+Jun-02 16:02:56.133 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:02:56.133 [Task submitter] INFO  nextflow.Session - [8b/f46e32] Submitted process > pystats (1)
+Jun-02 16:03:03.820 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 39; name: assembly (1); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/57/0c4bb9fc6c2bb0a430a003818da85a]
+Jun-02 16:03:03.836 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:03:03.836 [Task submitter] INFO  nextflow.Session - [0b/4f7680] Submitted process > pystats (2)
+Jun-02 16:03:09.219 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 40; name: assembly (2); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/fa/794013db87272c5b791dd01637719d]
+Jun-02 16:03:09.246 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:03:09.246 [Task submitter] INFO  nextflow.Session - [12/221e20] Submitted process > pystats (3)
+Jun-02 16:03:27.336 [Task monitor] DEBUG n.processor.TaskPollingMonitor - !! executor local > tasks to be completed: 4 -- submitted tasks are shown below
+~> TaskHandler[id: 44; name: assembly (4); status: RUNNING; exit: -; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/cb/092450776c2e41691933a9a493b0e0]
+~> TaskHandler[id: 45; name: pystats (1); status: RUNNING; exit: -; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/8b/f46e32d6b312ec87e1ff603569f717]
+~> TaskHandler[id: 46; name: pystats (2); status: RUNNING; exit: -; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/0b/4f76804527ebdf9b0259d705381628]
+~> TaskHandler[id: 47; name: pystats (3); status: RUNNING; exit: -; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/12/221e20444f5f5a6e84e1f903cc7cb0]
+Jun-02 16:03:43.578 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 44; name: assembly (4); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/cb/092450776c2e41691933a9a493b0e0]
+Jun-02 16:03:43.601 [Task submitter] DEBUG nextflow.executor.LocalTaskHandler - Launch cmd line: /bin/bash -ue .command.run
+Jun-02 16:03:43.601 [Task submitter] INFO  nextflow.Session - [09/887598] Submitted process > pystats (4)
+Jun-02 16:04:17.243 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 45; name: pystats (1); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/8b/f46e32d6b312ec87e1ff603569f717]
+Jun-02 16:04:29.745 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 46; name: pystats (2); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/0b/4f76804527ebdf9b0259d705381628]
+Jun-02 16:04:30.262 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 47; name: pystats (3); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/12/221e20444f5f5a6e84e1f903cc7cb0]
+Jun-02 16:05:10.108 [Task monitor] DEBUG n.processor.TaskPollingMonitor - Task completed > TaskHandler[id: 48; name: pystats (4); status: COMPLETED; exit: 0; error: -; workDir: /blue/bphl-florida/dongyibo/Dev_Daytona_dengue/git/work/09/88759886c56d46462ed54961935574]
+Jun-02 16:05:10.115 [main] DEBUG nextflow.Session - Session await > all process finished
+Jun-02 16:05:10.208 [main] DEBUG nextflow.Session - Session await > all barriers passed
+Jun-02 16:05:10.217 [main] DEBUG nextflow.trace.WorkflowStatsObserver - Workflow completed > WorkflowStats[succeededCount=48; failedCount=0; ignoredCount=0; cachedCount=0; pendingCount=0; submittedCount=0; runningCount=0; retriesCount=0; abortedCount=0; succeedDuration=24m 11s; failedDuration=0ms; cachedDuration=0ms;loadCpus=0; loadMemory=0; peakRunning=4; peakCpus=4; peakMemory=0; ]
+Jun-02 16:05:10.317 [main] DEBUG nextflow.CacheDB - Closing CacheDB done
+Jun-02 16:05:10.327 [main] DEBUG nextflow.script.ScriptRunner - > Execution complete -- Goodbye

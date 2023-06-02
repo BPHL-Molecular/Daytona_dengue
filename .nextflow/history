@@ -1,0 +1,2 @@
+2023-06-02 15:51:06	3.7s	gigantic_coulomb	OK	530c185de9c85401b6ed2f7904d0af4a	4fe99d8e-a5a8-47a5-addf-5057d2b85b2f	nextflow run daytona_dengue.nf -params-file params.yaml
+2023-06-02 15:58:22	6m 48s	furious_allen	OK	530c185de9c85401b6ed2f7904d0af4a	2f0ff3bc-d440-42f7-a8d2-d3e8f1352165	nextflow run daytona_dengue.nf -params-file params.yaml

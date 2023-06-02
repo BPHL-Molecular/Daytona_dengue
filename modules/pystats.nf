@@ -128,6 +128,8 @@ process pystats {
 
            out_log.close()
            err_log.close()
+           subprocess.run("mv " + "${params.output}"+"/dengue1/"+"${samplename}"+"/assembly/vadr_results "+"${params.output}"+"/dengue1/"+"${samplename}"+"/assembly/"+"${samplename}"+"_vadr_results", shell=True, check=True)
+
        else:
            vadr_flag = 'NA'
            lineage = 'NA'
@@ -253,6 +255,8 @@ process pystats {
 
            out_log.close()
            err_log.close()
+           subprocess.run("mv " + "${params.output}"+"/dengue2/"+"${samplename}"+"/assembly/vadr_results "+"${params.output}"+"/dengue2/"+"${samplename}"+"/assembly/"+"${samplename}"+"_vadr_results", shell=True, check=True)
+
        else:
            vadr_flag = 'NA'
            lineage = 'NA'
@@ -378,6 +382,8 @@ process pystats {
 
            out_log.close()
            err_log.close()
+           subprocess.run("mv " + "${params.output}"+"/dengue3/"+"${samplename}"+"/assembly/vadr_results "+"${params.output}"+"/dengue3/"+"${samplename}"+"/assembly/"+"${samplename}"+"_vadr_results", shell=True, check=True)
+
        else:
            vadr_flag = 'NA'
            lineage = 'NA'
@@ -503,6 +509,8 @@ process pystats {
 
            out_log.close()
            err_log.close()
+           subprocess.run("mv " + "${params.output}"+"/dengue4/"+"${samplename}"+"/assembly/vadr_results "+"${params.output}"+"/dengue4/"+"${samplename}"+"/assembly/"+"${samplename}"+"_vadr_results", shell=True, check=True)
+
        else:
            vadr_flag = 'NA'
            lineage = 'NA'
