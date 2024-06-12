@@ -20,8 +20,9 @@ mkdir kraken_out_broad
 for f in $(cat samples.txt)
 do
    echo $f
-   singularity exec -B $(pwd):/data --pwd /data --cleanenv /apps/staphb-toolkit/containers/kraken2_2.1.2-no-db.sif kraken2 --db /blue/bphl-florida/share/kraken_databases/kraken2-broad-custom_other-20200411/ --threads 10 --report kraken_out_broad/${f}.report --output kraken_out_broad/${f}_kraken.out --paired ./fastqs/${f}_1.fastq.gz ./fastqs/${f}_2.fastq.gz
-    
+   #singularity exec -B $(pwd):/data --pwd /data --cleanenv /apps/staphb-toolkit/containers/kraken2_2.1.2-no-db.sif kraken2 --db /blue/bphl-florida/share/kraken_databases/kraken2-broad-custom_other-20200411/ --threads 10 --report kraken_out_broad/${f}.report --output kraken_out_broad/${f}_kraken.out --paired ./fastqs/${f}_1.fastq.gz ./fastqs/${f}_2.fastq.gz
+   singularity exec -B $(pwd):/data --pwd /data --cleanenv /apps/staphb-toolkit/containers/kraken2_2.1.2-no-db.sif kraken2 --db /orange/bphl-florida/databases/kraken_databases/kraken2-broad-custom_other-20200411/ --threads 10 --report kraken_out_broad/${f}.report --output kraken_out_broad/${f}_kraken.out --paired ./fastqs/${f}_1.fastq.gz ./fastqs/${f}_2.fastq.gz
+
 done
 
 # move each sample's fastq data files to its serotype folder
