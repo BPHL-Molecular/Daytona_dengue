@@ -53,3 +53,6 @@ do
    mv "$i" "${i/SER[1-4]_/}"
   
 done
+
+mkdir ./output/assembly_qc_pass/SER_del
+python3 ./rename_aqp.py
