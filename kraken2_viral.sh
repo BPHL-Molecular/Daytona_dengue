@@ -31,6 +31,7 @@ done
 #mkdir ./fastqs/dengue3
 #mkdir ./fastqs/dengue4
 mkdir ./fastqs/unserotype
+mkdir ./fastqs/origin 
 
 echo "Sample","Serotype","Confidence" > Serotypes.txt
 for f in $(cat samples.txt)
@@ -42,9 +43,13 @@ do
    then
       #mv ./fastqs/${f}_1.fastq.gz ./fastqs/dengue${X}/
       #mv ./fastqs/${f}_2.fastq.gz ./fastqs/dengue${X}/
+      cp ./fastqs/${f}_1.fastq.gz ./fastqs/origin/
+      cp ./fastqs/${f}_2.fastq.gz ./fastqs/origin/
       mv ./fastqs/${f}_1.fastq.gz ./fastqs/SER${X}_${f}_1.fastq.gz
       mv ./fastqs/${f}_2.fastq.gz ./fastqs/SER${X}_${f}_2.fastq.gz
    else
+      cp ./fastqs/${f}_1.fastq.gz ./fastqs/origin/
+      cp ./fastqs/${f}_2.fastq.gz ./fastqs/origin/
       mv ./fastqs/${f}_1.fastq.gz ./fastqs/unserotype/
       mv ./fastqs/${f}_2.fastq.gz ./fastqs/unserotype/
    fi
