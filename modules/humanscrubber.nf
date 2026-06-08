@@ -1,71 +1,29 @@
 process humanscrubber {
-   input:
-      //tuple val(y), val(x)
-      val(x)
+    tag "${meta.id}"
+    publishDir "${params.output}/${meta.id}/humanscrubber", mode: 'copy'
 
-   output:
-      //stdout
-      //path 'xfile.txt', emit: aLook
-      //val "${params.output}/dengue1/${x}", emit: outputpath1
-      //path "${params.output}/${x}_trim_2.fastq", emit: trimR2
-      val "${x}"
-      
-   """  
-   if [[ ${x} =~ SER1_ ]];then
+    input:
+        tuple val(meta), path(reads)
+    output:
+        tuple val(meta), path("${meta.id}_R{1,2}_humanclean.fastq.gz"), emit: reads
 
-      # Run sra-human-scrubber to remove human reads
-      gzip -d ${params.output}/dengue1/${x}/${x}_1.fastq.gz
-      gzip -d ${params.output}/dengue1/${x}/${x}_2.fastq.gz
+    script:
+    def prefix = meta.id
+    """
+    gzip -dc ${reads[0]} > ${prefix}_R1.fastq
+    gzip -dc ${reads[1]} > ${prefix}_R2.fastq
 
-      /opt/scrubber/scripts/scrub.sh -r -i ${params.output}/dengue1/${x}/${x}_1.fastq -o ${params.output}/dengue1/${x}/${x}_1_humanclean.fastq
-      /opt/scrubber/scripts/scrub.sh -r -i ${params.output}/dengue1/${x}/${x}_2.fastq -o ${params.output}/dengue1/${x}/${x}_2_humanclean.fastq
+    /opt/scrubber/scripts/scrub.sh -r \\
+        -i ${prefix}_R1.fastq \\
+        -o ${prefix}_R1_humanclean.fastq
 
-      gzip ${params.output}/dengue1/${x}/${x}_1_humanclean.fastq
-      gzip ${params.output}/dengue1/${x}/${x}_2_humanclean.fastq
+    /opt/scrubber/scripts/scrub.sh -r \\
+        -i ${prefix}_R2.fastq \\
+        -o ${prefix}_R2_humanclean.fastq
 
-      
-   elif [[ ${x} =~ SER2_ ]];then
+    gzip ${prefix}_R1_humanclean.fastq
+    gzip ${prefix}_R2_humanclean.fastq
 
-      # Run sra-human-scrubber to remove human reads
-      gzip -d ${params.output}/dengue2/${x}/${x}_1.fastq.gz
-      gzip -d ${params.output}/dengue2/${x}/${x}_2.fastq.gz
-
-     /opt/scrubber/scripts/scrub.sh -r -i ${params.output}/dengue2/${x}/${x}_1.fastq -o ${params.output}/dengue2/${x}/${x}_1_humanclean.fastq
-     /opt/scrubber/scripts/scrub.sh -r -i ${params.output}/dengue2/${x}/${x}_2.fastq -o ${params.output}/dengue2/${x}/${x}_2_humanclean.fastq
-
-      gzip ${params.output}/dengue2/${x}/${x}_1_humanclean.fastq
-      gzip ${params.output}/dengue2/${x}/${x}_2_humanclean.fastq
-
-      
-   elif [[ ${x} =~ SER3_ ]];then
-
-      # Run sra-human-scrubber to remove human reads
-      gzip -d ${params.output}/dengue3/${x}/${x}_1.fastq.gz
-      gzip -d ${params.output}/dengue3/${x}/${x}_2.fastq.gz
-
-      /opt/scrubber/scripts/scrub.sh -r -i ${params.output}/dengue3/${x}/${x}_1.fastq -o ${params.output}/dengue3/${x}/${x}_1_humanclean.fastq
-      /opt/scrubber/scripts/scrub.sh -r -i ${params.output}/dengue3/${x}/${x}_2.fastq -o ${params.output}/dengue3/${x}/${x}_2_humanclean.fastq
-
-      gzip ${params.output}/dengue3/${x}/${x}_1_humanclean.fastq
-      gzip ${params.output}/dengue3/${x}/${x}_2_humanclean.fastq
-   
-
-      
-   elif [[ ${x} =~ SER4_ ]];then
-
-      # Run sra-human-scrubber to remove human reads
-      gzip -d ${params.output}/dengue4/${x}/${x}_1.fastq.gz
-      gzip -d ${params.output}/dengue4/${x}/${x}_2.fastq.gz
-
-      /opt/scrubber/scripts/scrub.sh -r -i ${params.output}/dengue4/${x}/${x}_1.fastq -o ${params.output}/dengue4/${x}/${x}_1_humanclean.fastq
-      /opt/scrubber/scripts/scrub.sh -r -i ${params.output}/dengue4/${x}/${x}_2.fastq -o ${params.output}/dengue4/${x}/${x}_2_humanclean.fastq
-
-      gzip ${params.output}/dengue4/${x}/${x}_1_humanclean.fastq
-      gzip ${params.output}/dengue4/${x}/${x}_2_humanclean.fastq
-
-   else
-      echo "No serotyped sequence is in fastqs folder"
-   fi
-
-   """
+    rm ${prefix}_R1.fastq ${prefix}_R2.fastq
+    """
 }

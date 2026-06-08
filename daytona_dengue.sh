@@ -1,58 +1,36 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #SBATCH --account=bphl-umbrella
 #SBATCH --qos=bphl-umbrella
-#SBATCH --job-name=Daytona_dengue
+#SBATCH --job-name=daytona_dengue
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=25
-#SBATCH --mem=100gb
+#SBATCH --cpus-per-task=40
+#SBATCH --mem=200gb
+#SBATCH --time=48:00:00
 #SBATCH --output=daytona_dengue.%j.out
 #SBATCH --error=daytona_dengue.%j.err
-#SBATCH --time=3-00
+#SBATCH --mail-user=<EMAIL>
+#SBATCH --mail-type=FAIL,END
 
-#module load singularity
-module load apptainer
+module load conda nextflow apptainer
+conda activate PIPELINE_ENV
 
-#identify serotype of each sample
-bash ./kraken2_viral.sh
+# Path to container image cache directory
+export NXF_APPTAINER_CACHEDIR=/path/to/apptainer/cache
 
-#nextflow run daytona_dengue.nf -params-file params.yaml -c ./configs/singularity.config
-#nextflow run daytona_dengue.nf -params-file params.yaml -c ./configs/docker.config
-nextflow run daytona_dengue.nf -params-file params.yaml
+# Run pipeline
+nextflow run daytona_dengue.nf -profile apptainer -params-file params.yaml
 
+# Rename output directory with timestamp on success
+nxf_exit=$?
+output_dir=$(grep '^output:' params.yaml | sed 's/output:[[:space:]]*//' | tr -d '"')
+if [ $nxf_exit -eq 0 ] && [ -d "$output_dir" ]; then
+    dt=$(date "+%Y%m%d%H%M%S")
+    mv "$output_dir" "${output_dir}-${dt}"
+elif [ $nxf_exit -ne 0 ]; then
+    echo "Pipeline did not complete successfully." >&2
+else
+    echo "Pipeline exited 0 but output directory not found: $output_dir" >&2
+fi
 
-sort ./output/dengue*/*/report.txt | uniq > ./output/sum_report.txt
-sed -i '/sampleID\treference/d' ./output/sum_report.txt
-sed -i '1i sampleID\treference\tstart\tend\tnum_raw_reads\tnum_clean_reads\tnum_mapped_reads\tpercent_mapped_clean_reads\tcov_bases_mapped\tpercent_genome_cov_map\tmean_depth\tmean_base_qual\tmean_map_qual\tassembly_length\tnumN\tpercent_ref_genome_cov\tVADR_flag\tQC_flag' ./output/sum_report.txt
-
-mv ./Serotypes.txt ./output/
-mv ./kraken_out_broad ./output/
-
-#cat ./output/assemblies/*.fa > ./output/assemblies.fasta
-#singularity exec /apps/staphb-toolkit/containers/nextclade_2021-03-15.sif nextclade --input-fasta ./output/assemblies.fasta --output-csv ./output/nextclade_report.csv
-
-python3 ./table.py
-
-mkdir ./output/fastqc ./output/humanscrubber ./output/bbduk ./output/fastqc_clean ./output/multiqc ./output/alignment ./output/variant ./output/assembly ./output/assembly_qc_pass ./output/variant_qc_pass ./output/report
-mv ./output/dengue*/*/*original_fastqc* ./output/fastqc
-mv ./output/dengue*/*/*humanclean.fastq* ./output/humanscrubber
-mv ./output/dengue*/*/*fq.gz ./output/bbduk
-mv ./output/dengue*/*/*clean_fastqc* ./output/fastqc_clean
-mv ./output/dengue*/*/*multiqc_data ./output/multiqc
-mv ./output/dengue*/*/alignment/* ./output/alignment
-mv ./output/dengue*/SER*/variants/* ./output/variant
-mv ./output/dengue*/SER*/assembly/SER* ./output/assembly
-mv ./output/dengue*/assemblies/* ./output/assembly_qc_pass
-mv ./output/dengue*/variants/* ./output/variant_qc_pass
-#mv ./output/dengue*/*/assembly/*vadr_results ./output/vadr_results
-mv ./output/final_report.txt ./output/report
-mv ./output/Serotypes.txt ./output/report
-rm -r ./output/dengue* ./output/sum_report.txt samples.txt ai
-
-for i in ./output/*/SER*
-do
-   mv "$i" "${i/SER[1-4]_/}"
-  
-done
-
-mkdir ./output/assembly_qc_pass/SER_del
-python3 ./rename_aqp.py
+# Cleanup (disabled for troubleshooting runs)
+#rm -rf ./work
