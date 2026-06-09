@@ -62,5 +62,9 @@ process ivar_consensus {
         -m 10 \\
         -n N \\
         -p ${prefix}.consensus
+
+    # ivar names the sequence after the reference; rename to sample ID so
+    # downstream tools (Nextclade, summary_report.py) can match by sample ID
+    sed -i "1s/^>.*/>${prefix}/" ${prefix}.consensus.fa
     """
 }

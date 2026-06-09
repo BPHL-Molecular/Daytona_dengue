@@ -24,7 +24,7 @@ include { ivar_trim                        } from './modules/ivar.nf'
 include { ivar_variants                    } from './modules/ivar.nf'
 include { ivar_consensus                   } from './modules/ivar.nf'
 include { qc_gate                          } from './modules/qc_gate.nf'
-include { vadr                             } from './modules/vadr.nf'
+include { vadr_download; vadr              } from './modules/vadr.nf'
 include { nextclade_download; nextclade    } from './modules/nextclade.nf'
 include { summary_report                   } from './modules/summary_report.nf'
 
@@ -47,7 +47,6 @@ workflow {
     ==========================================================================
     input dir    : ${params.input}
     output dir   : ${params.output}
-    kraken db    : ${params.kraken_db}
     assets       : ${projectDir}/assets
     ==========================================================================
     """
@@ -200,9 +199,10 @@ workflow {
         .join( ivar_consensus.out.consensus.map { meta, f -> [ meta.id, f ] } )
         .map { _id, meta, consensus -> [ meta, consensus ] }
 
-    vadr(ch_vadr_input)
-
+    ch_vadr_models  = vadr_download()
     ch_nextclade_db = nextclade_download()
+
+    vadr(ch_vadr_input, ch_vadr_models.models)
 
     nextclade(ivar_consensus.out.consensus, ch_nextclade_db.db)
 

@@ -1,10 +1,5 @@
-# Runtime paths — absolute paths, no trailing slash
-# input:     directory containing paired FASTQ files
-# output:    directory where all results will be written
-# kraken_db: path to Kraken2 viral database directory (for informational classification)
-#
-# reference, primers, and annotations are bundled in assets/ within the repo
+# input:  directory containing paired FASTQ files, absolute paths, no trailing slash
+# output: directory where all results will be written, absolute paths, no trailing slash
 
-input:     "/full/path/to/fastqs"
-output:    "/full/path/to/output"
-kraken_db: "/full/path/to/kraken2_database"
+input:  "/full/path/to/fastqs"
+output: "/full/path/to/output"
