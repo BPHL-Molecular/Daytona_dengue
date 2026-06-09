@@ -9,14 +9,15 @@
 
 nextflow.enable.dsl = 2
 
-include { kraken2                          } from './modules/kraken2.nf'
-include { serotype_detect                  } from './modules/serotype_detect.nf'
 include { fastqc; fastqc_clean             } from './modules/fastqc.nf'
 include { humanscrubber                    } from './modules/humanscrubber.nf'
 include { trimmomatic                      } from './modules/trimmomatic.nf'
 include { bbtools_adapters; bbtools_phix   } from './modules/bbtools.nf'
 include { multiqc                          } from './modules/multiqc.nf'
-include { bwa_mem                          } from './modules/bwa.nf'
+include { kraken2                          } from './modules/kraken2.nf'
+include { bwa                              } from './modules/bwa.nf'
+include { serotype_detect                  } from './modules/serotype_detect.nf'
+include { samtools_screen                  } from './modules/samtools.nf'
 include { samtools_bam                     } from './modules/samtools.nf'
 include { samtools_coverage                } from './modules/samtools.nf'
 include { samtools_mpileup                 } from './modules/samtools.nf'
@@ -67,7 +68,24 @@ workflow {
     ch_sd_denv3 = channel.value(refFileList('DENV3'))
     ch_sd_denv4 = channel.value(refFileList('DENV4'))
 
-    serotype_detect(ch_reads, ch_sd_denv1, ch_sd_denv2, ch_sd_denv3, ch_sd_denv4)
+    fastqc(ch_reads)
+    humanscrubber(ch_reads)
+    trimmomatic(humanscrubber.out.reads)
+    bbtools_adapters(trimmomatic.out.reads)
+    bbtools_phix(bbtools_adapters.out.reads)
+    fastqc_clean(bbtools_phix.out.reads)
+
+    ch_multiqc_input = fastqc.out.zip
+        .mix(fastqc_clean.out.zip)
+        .map { _meta, zip -> zip }
+        .collect()
+    multiqc(ch_multiqc_input)
+
+    kraken2(bbtools_phix.out.reads)
+
+    bwa(bbtools_phix.out.reads, ch_sd_denv1, ch_sd_denv2, ch_sd_denv3, ch_sd_denv4)
+    samtools_screen(bwa.out.sams)
+    serotype_detect(samtools_screen.out.coverage)
 
     ch_serotyped = serotype_detect.out.serotype
         .map { meta, serotype_file ->
@@ -86,10 +104,10 @@ workflow {
             if (ids) log.warn "Unserotyped samples (excluded from pipeline): ${ids.join(', ')}"
         }
 
-    ch_typed_reads = ch_serotyped.typed
+    ch_clean_typed = ch_serotyped.typed
         .map { enriched_meta, orig_meta -> [ orig_meta.id, enriched_meta ] }
         .join(
-            ch_reads.map { meta, reads -> [ meta.id, reads ] }
+            bbtools_phix.out.reads.map { meta, reads -> [ meta.id, reads ] }
         )
         .map { _id, enriched_meta, reads -> [ enriched_meta, reads ] }
 
@@ -106,50 +124,32 @@ workflow {
         DENV4: "${projectDir}/assets/annotations/Dengue4_GCF_000865065.1_ViralProj15599_genomic.gff.gz",
     ]
 
-    ch_reads_with_ref = ch_typed_reads
-        .map { meta, reads ->
-            [ meta, reads, refFileList(meta.serotype),
+    ch_clean_with_ref = ch_clean_typed
+        .map { meta, _reads ->
+            [ meta, refFileList(meta.serotype),
               file(primer_map[meta.serotype]),
               file(gff_map[meta.serotype]) ]
         }
 
-
-    fastqc(ch_typed_reads)
-
-    kraken2(ch_reads)
-
-    humanscrubber(ch_typed_reads)
-
-    trimmomatic(humanscrubber.out.reads)
-
-    bbtools_adapters(trimmomatic.out.reads)
-
-    bbtools_phix(bbtools_adapters.out.reads)
-
-    fastqc_clean(bbtools_phix.out.reads)
-
-    ch_multiqc_input = fastqc.out.zip
-        .mix(fastqc_clean.out.zip)
-        .map { _meta, zip -> zip }
-        .collect()
-
-    multiqc(ch_multiqc_input)
-
-    ch_clean_with_ref = bbtools_phix.out.reads
-        .map { meta, reads -> [ meta.id, meta, reads ] }
+    ch_winning_sam = ch_clean_typed
+        .map { meta, _reads -> [ meta.id, meta ] }
         .join(
-            ch_reads_with_ref.map { meta, _reads, ref_list, primer, gff -> [ meta.id, ref_list, primer, gff ] }
+            bwa.out.sams.map { meta, sam_files ->
+                def files = sam_files instanceof List ? sam_files : [sam_files]
+                [ meta.id, files ]
+            }
         )
-        .map { _id, meta, reads, ref_list, primer, gff -> [ meta, reads, ref_list, primer, gff ] }
+        .map { _id, meta, sam_files ->
+            def winning = sam_files.find { f -> f.name.contains("_${meta.serotype}.sam") }
+            [ meta, winning ]
+        }
 
-    bwa_mem(ch_clean_with_ref.map { meta, reads, ref_list, _primer, _gff -> [ meta, reads, ref_list ] })
-
-    samtools_bam(bwa_mem.out.sam)
+    samtools_bam(ch_winning_sam)
 
     ch_bam_with_primer = samtools_bam.out.bam
         .map { meta, bam, bai -> [ meta.id, meta, bam, bai ] }
         .join(
-            ch_clean_with_ref.map { meta, _reads, _ref_list, primer, _gff -> [ meta.id, primer ] }
+            ch_clean_with_ref.map { meta, _ref_list, primer, _gff -> [ meta.id, primer ] }
         )
         .map { _id, meta, bam, bai, primer -> [ meta, bam, bai, primer ] }
 
@@ -160,7 +160,7 @@ workflow {
     ch_trimmed_bam_with_ref = ivar_trim.out.bam
         .map { meta, bam, bai -> [ meta.id, meta, bam, bai ] }
         .join(
-            ch_clean_with_ref.map { meta, _reads, ref_list, _primer, _gff ->
+            ch_clean_with_ref.map { meta, ref_list, _primer, _gff ->
                 def ref_fa = ref_list instanceof List ? ref_list.find { f -> f.name.endsWith('.fasta') } : ref_list
                 [ meta.id, ref_fa ]
             }
@@ -172,7 +172,7 @@ workflow {
     ch_mpileup_with_ref_gff = samtools_mpileup.out.mpileup
         .map { meta, mpileup -> [ meta.id, meta, mpileup ] }
         .join(
-            ch_clean_with_ref.map { meta, _reads, ref_list, _primer, gff ->
+            ch_clean_with_ref.map { meta, ref_list, _primer, gff ->
                 def ref_fa = ref_list instanceof List ? ref_list.find { f -> f.name.endsWith('.fasta') } : ref_list
                 [ meta.id, ref_fa, gff ]
             }
@@ -222,4 +222,3 @@ workflow {
         kraken2.out.report.map             { _meta, f -> f }.collect()
     )
 }
-

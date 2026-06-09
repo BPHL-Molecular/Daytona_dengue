@@ -4,9 +4,10 @@ All notable changes to the Daytona Dengue pipeline will be documented in this fi
 
 ---
 
-## [Unreleased] — BPHL Sanibel V2.1 Refactor
+## [Unreleased] — BPHL GitHub SOP Format Refactor
 
 ### Added
+
 - `bin/` directory for Python helper scripts
 - `assets/annotations/` directory for GFF annotation files
 - `modules/kraken2.nf` — Kraken2 serotyping as a Nextflow process
@@ -20,6 +21,7 @@ All notable changes to the Daytona Dengue pipeline will be documented in this fi
 - `CHANGELOG.md`
 
 ### Changed
+
 - `nextflow.config` — full rewrite; single config replaces `configs/` directory; all processes get `container`, `cpus`, `memory`; parameterized tool settings; profiles for `standard`, `docker`, `singularity`, `apptainer`
 - `params.yaml` — updated with `annotations`, `kraken_db`, `nextclade_cache_dir` keys; tool params as commented-out overrides
 - `daytona_dengue.sh` — updated to BPHL guide format; post-processing removed; timestamp rename block added
@@ -36,6 +38,7 @@ All notable changes to the Daytona Dengue pipeline will be documented in this fi
 - GFF files moved from `reference/` to `assets/annotations/`
 
 ### Removed
+
 - `configs/` directory — replaced by single `nextflow.config`
 - `modules/fastqc_clean.nf` — merged into `modules/fastqc.nf`
 - `modules/frag_bwa.nf` — renamed to `modules/bwa.nf`

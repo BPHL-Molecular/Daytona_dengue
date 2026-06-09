@@ -1,3 +1,22 @@
+process samtools_screen {
+    tag "${meta.id}"
+    publishDir "${params.output}/${meta.id}/serotype", mode: 'copy'
+
+    input:
+        tuple val(meta), path(sam_files)
+    output:
+        tuple val(meta), path("*_DENV?.coverage.txt"), emit: coverage
+
+    script:
+    def prefix = meta.id
+    """
+    samtools view -F 4 -b ${prefix}_DENV1.sam | samtools coverage -o ${prefix}_DENV1.coverage.txt
+    samtools view -F 4 -b ${prefix}_DENV2.sam | samtools coverage -o ${prefix}_DENV2.coverage.txt
+    samtools view -F 4 -b ${prefix}_DENV3.sam | samtools coverage -o ${prefix}_DENV3.coverage.txt
+    samtools view -F 4 -b ${prefix}_DENV4.sam | samtools coverage -o ${prefix}_DENV4.coverage.txt
+    """
+}
+
 process samtools_bam {
     tag "${meta.id}"
     publishDir "${params.output}/${meta.id}/samtools", mode: 'copy'
