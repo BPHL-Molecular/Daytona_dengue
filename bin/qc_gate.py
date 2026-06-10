@@ -9,13 +9,13 @@ This script exists solely to produce the QC decision needed to gate
 downstream VADR annotation. All full reporting is handled by summary_report.py.
 
 QC thresholds (hardcoded):
-    percent_ref_genome_cov >= 79.5%  AND  mean_depth >= 30x  → PASS
+    percent_ref_genome_cov >= 80%  AND  mean_depth >= 30x  → PASS
 """
 
 import argparse
 import sys
 
-QC_MIN_COVERAGE = 79.5
+QC_MIN_COVERAGE = 80.0
 QC_MIN_DEPTH    = 30.0
 
 
@@ -54,7 +54,7 @@ def main():
     mean_depth = float(mean_depth_str)
 
     if pct_genome < QC_MIN_COVERAGE:
-        flag = f"FAIL: Percent genome < {QC_MIN_COVERAGE}%"
+        flag = f"FAIL: Percent genome < {int(QC_MIN_COVERAGE)}%"
     elif mean_depth < QC_MIN_DEPTH:
         flag = f"FAIL: Mean read depth < {int(QC_MIN_DEPTH)}x"
     else:

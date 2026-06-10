@@ -31,6 +31,7 @@ process bbtools_phix {
     output:
         tuple val(meta), path("${meta.id}_R{1,2}_clean.fastq.gz"), emit: reads
         tuple val(meta), path("${meta.id}_phix_stats.txt"),         emit: phix_stats
+        tuple val(meta), path("${meta.id}_phix_log.txt"),           emit: phix_log
 
     script:
     def prefix = meta.id
@@ -42,6 +43,7 @@ process bbtools_phix {
         out2=${prefix}_R2_clean.fastq.gz \\
         ref=/bbmap/resources/phix174_ill.ref.fa.gz \\
         k=31 hdist=1 \\
-        stats=${prefix}_phix_stats.txt
+        stats=${prefix}_phix_stats.txt \\
+        2>${prefix}_phix_log.txt
     """
 }

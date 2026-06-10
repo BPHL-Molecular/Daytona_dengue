@@ -10,18 +10,26 @@ process summary_report {
         path nextclade_files
         path vadr_dirs
         path kraken2_reports
+        path serotype_files
+        path screen_cov_files
+        path trimstat_files
+        path phix_log_files
     output:
-        path "summary_report.tsv", emit: report
+        path "summary_report.txt", emit: report
 
     script:
     """
     summary_report.py \\
-        --qc-dir        . \\
-        --coverage-dir  . \\
-        --consensus-dir . \\
-        --nextclade-dir . \\
-        --vadr-dir      . \\
-        --kraken2-dir   . \\
-        --output        summary_report.tsv
+        --qc-dir         . \\
+        --coverage-dir   . \\
+        --consensus-dir  . \\
+        --nextclade-dir  . \\
+        --vadr-dir       . \\
+        --kraken2-dir    . \\
+        --serotype-dir   . \\
+        --screen-cov-dir . \\
+        --trimstat-dir   . \\
+        --phix-log-dir   . \\
+        --output         summary_report.txt
     """
 }

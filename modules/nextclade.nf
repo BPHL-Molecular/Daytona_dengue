@@ -1,13 +1,17 @@
 process nextclade_download {
-    storeDir "${params.output}/db/nextclade"
+    storeDir "${params.assets_dir}/nextclade/${sero}"
+
+    input:
+        val sero
 
     output:
-        path "nextclade_dataset", emit: db
+        tuple val(sero), path("nextclade_dataset"), emit: db
 
     script:
+    def name = sero.toLowerCase()
     """
     nextclade dataset get \\
-        --name 'nextstrain/dengue/all' \\
+        --name "nextstrain/dengue/${name}" \\
         --output-dir nextclade_dataset
     """
 }
@@ -17,8 +21,8 @@ process nextclade {
     publishDir "${params.output}/${meta.id}/nextclade", mode: 'copy'
 
     input:
-        tuple val(meta), path(consensus)
-        path(dataset)
+        tuple val(meta), path(consensus), path(dataset)
+
     output:
         tuple val(meta), path("${meta.id}_nextclade.tsv"), emit: tsv
         val meta,                                          emit: done

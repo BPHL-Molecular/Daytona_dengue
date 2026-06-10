@@ -1,5 +1,5 @@
 process vadr_download {
-    storeDir "${params.output}/db/vadr"
+    storeDir "${params.assets_dir}/vadr"
 
     output:
         path "vadr-models-flavi-1.2-1", emit: models
@@ -20,8 +20,8 @@ process vadr {
         tuple val(meta), path(consensus)
         path(vadr_models)
     output:
-        tuple val(meta), path("vadr_results/"), emit: results
-        val meta,                               emit: done
+        tuple val(meta), path("${meta.id}_vadr_results/"), emit: results
+        val meta,                                          emit: done
 
     script:
     def prefix = meta.id
@@ -42,6 +42,6 @@ process vadr {
         --mdir ${vadr_models} \\
         --noseqnamemax \\
         ${prefix}.trimmed.fasta \\
-        vadr_results
+        ${prefix}_vadr_results
     """
 }

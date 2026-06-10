@@ -10,10 +10,10 @@ process samtools_screen {
     script:
     def prefix = meta.id
     """
-    samtools view -F 4 -b ${prefix}_DENV1.sam | samtools coverage -o ${prefix}_DENV1.coverage.txt
-    samtools view -F 4 -b ${prefix}_DENV2.sam | samtools coverage -o ${prefix}_DENV2.coverage.txt
-    samtools view -F 4 -b ${prefix}_DENV3.sam | samtools coverage -o ${prefix}_DENV3.coverage.txt
-    samtools view -F 4 -b ${prefix}_DENV4.sam | samtools coverage -o ${prefix}_DENV4.coverage.txt
+    samtools view -F 4 -b ${prefix}_DENV1.sam | samtools sort | samtools coverage - -o ${prefix}_DENV1.coverage.txt
+    samtools view -F 4 -b ${prefix}_DENV2.sam | samtools sort | samtools coverage - -o ${prefix}_DENV2.coverage.txt
+    samtools view -F 4 -b ${prefix}_DENV3.sam | samtools sort | samtools coverage - -o ${prefix}_DENV3.coverage.txt
+    samtools view -F 4 -b ${prefix}_DENV4.sam | samtools sort | samtools coverage - -o ${prefix}_DENV4.coverage.txt
     """
 }
 

@@ -9,6 +9,8 @@
 
 nextflow.enable.dsl = 2
 
+params.assets_dir = "${projectDir}/assets"
+
 include { fastqc; fastqc_clean             } from './modules/fastqc.nf'
 include { humanscrubber                    } from './modules/humanscrubber.nf'
 include { trimmomatic                      } from './modules/trimmomatic.nf'
@@ -199,12 +201,17 @@ workflow {
         .join( ivar_consensus.out.consensus.map { meta, f -> [ meta.id, f ] } )
         .map { _id, meta, consensus -> [ meta, consensus ] }
 
-    ch_vadr_models  = vadr_download()
-    ch_nextclade_db = nextclade_download()
-
+    ch_vadr_models = vadr_download()
     vadr(ch_vadr_input, ch_vadr_models.models)
 
-    nextclade(ivar_consensus.out.consensus, ch_nextclade_db.db)
+    nextclade_download(channel.of('DENV1', 'DENV2', 'DENV3', 'DENV4'))
+
+    ch_nextclade_input = ivar_consensus.out.consensus
+        .map { meta, consensus -> [meta.serotype, meta, consensus] }
+        .combine(nextclade_download.out.db, by: 0)
+        .map { _sero, meta, consensus, dataset -> [meta, consensus, dataset] }
+
+    nextclade(ch_nextclade_input)
 
     ch_barrier = vadr.out.done
         .mix(nextclade.out.done)
@@ -214,11 +221,15 @@ workflow {
 
     summary_report(
         ch_barrier,
-        qc_gate.out.qc.map                 { _meta, f -> f }.collect(),
-        samtools_coverage.out.coverage.map { _meta, f -> f }.collect(),
-        ivar_consensus.out.consensus.map   { _meta, f -> f }.collect(),
-        nextclade.out.tsv.map              { _meta, f -> f }.collect(),
-        vadr.out.results.map               { _meta, f -> f }.collect().ifEmpty([]),
-        kraken2.out.report.map             { _meta, f -> f }.collect()
+        qc_gate.out.qc.map                                       { _meta, f -> f }.collect().ifEmpty([]),
+        samtools_coverage.out.coverage.map                       { _meta, f -> f }.collect().ifEmpty([]),
+        ivar_consensus.out.consensus.map                         { _meta, f -> f }.collect().ifEmpty([]),
+        nextclade.out.tsv.map                                    { _meta, f -> f }.collect().ifEmpty([]),
+        vadr.out.results.map                                     { _meta, f -> f }.collect().ifEmpty([]),
+        kraken2.out.report.map                                   { _meta, f -> f }.collect(),
+        serotype_detect.out.serotype.map                         { _meta, f -> f }.collect(),
+        samtools_screen.out.coverage.flatMap                     { _meta, fs -> fs }.collect(),
+        trimmomatic.out.stats.map                                { _meta, f -> f }.collect(),
+        bbtools_phix.out.phix_log.map                            { _meta, f -> f }.collect()
     )
 }

@@ -20,15 +20,8 @@ process bwa {
     def denv4_fa = denv4_files instanceof List ? denv4_files.find { f -> f.name.endsWith('.fasta') } : denv4_files
     """
     bwa mem -t ${task.cpus} ${denv1_fa} ${reads[0]} ${reads[1]} > ${prefix}_DENV1.sam
-    samtools view -F 4 -b ${prefix}_DENV1.sam | samtools coverage -o ${prefix}_DENV1.coverage.txt
-
     bwa mem -t ${task.cpus} ${denv2_fa} ${reads[0]} ${reads[1]} > ${prefix}_DENV2.sam
-    samtools view -F 4 -b ${prefix}_DENV2.sam | samtools coverage -o ${prefix}_DENV2.coverage.txt
-
     bwa mem -t ${task.cpus} ${denv3_fa} ${reads[0]} ${reads[1]} > ${prefix}_DENV3.sam
-    samtools view -F 4 -b ${prefix}_DENV3.sam | samtools coverage -o ${prefix}_DENV3.coverage.txt
-
     bwa mem -t ${task.cpus} ${denv4_fa} ${reads[0]} ${reads[1]} > ${prefix}_DENV4.sam
-    samtools view -F 4 -b ${prefix}_DENV4.sam | samtools coverage -o ${prefix}_DENV4.coverage.txt
     """
 }
