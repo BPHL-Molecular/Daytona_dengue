@@ -306,6 +306,13 @@ def main():
         "VADR_flag", "QC_flag",
     ]
 
+    _REF_SERO = {
+        "NC_001477.1": "DENV1",
+        "NC_001474.2": "DENV2",
+        "NC_001475.2": "DENV3",
+        "NC_002640.1": "DENV4",
+    }
+
     rows = []
     for sid in all_samples:
         sero = serotype.get(sid, "NA")
@@ -316,7 +323,18 @@ def main():
         nc  = {} if unclassified else nextclade.get(sid, {})
         vf  = "NA" if unclassified else vadr.get(sid, "NA")
         k2  = kraken2.get(sid, "NA")
-        qf  = "FAIL: Unclassified" if unclassified else qc.get(sid, "NA")
+
+        if unclassified:
+            _best_pct  = cov.get("percent_genome_cov_map")
+            _best_sero = _REF_SERO.get((cov.get("reference") or "").split()[0], "")
+            if _best_pct and _best_sero:
+                qf = f"FAIL: Unclassified (best: {float(_best_pct):.1f}% {_best_sero})"
+            elif _best_pct:
+                qf = f"FAIL: Unclassified (best coverage: {float(_best_pct):.1f}%)"
+            else:
+                qf = "FAIL: Unclassified"
+        else:
+            qf = qc.get(sid, "NA")
 
         raw_reads   = trimstats.get(sid, "NA")
         clean_reads = phix_log.get(sid, "NA")
@@ -330,15 +348,18 @@ def main():
         else:
             pct_mapped = "NA"
 
-        ref_len = int(cov.get("end", 0) or 0)
-        called  = con.get("_seq_called", 0)
-        pct_ref = f"{(called / ref_len * 100):.4f}" if ref_len > 0 and not unclassified else "NA"
+        ref_len  = int(cov.get("end", 0) or 0)
+        called   = con.get("_seq_called", 0)
+        pct_ref  = f"{(called / ref_len * 100):.4f}" if ref_len > 0 and not unclassified else "NA"
+
+        _nc_qc_raw = nc.get("qc.overallStatus", "NA") or "NA"
+        _nc_qc     = "error" if (_nc_qc_raw == "NA" and nc.get("errors", "").strip()) else _nc_qc_raw
 
         row = {
             "sample_id":                     sid,
             "serotype":                      sero,
-            "nextclade_clade":               nc.get("clade", "NA"),
-            "nextclade_qc_overall":          nc.get("qc.overallStatus", "NA"),
+            "nextclade_clade":               nc.get("clade", "NA") or "NA",
+            "nextclade_qc_overall":          _nc_qc,
             "kraken2_percent":               k2,
             "reference":                     cov.get("reference", "NA"),
             "start":                         cov.get("start", "NA"),
