@@ -11,7 +11,7 @@ process nextclade_download {
     def name = sero.toLowerCase()
     """
     nextclade dataset get \\
-        --name "nextstrain/dengue/${name}" \\
+        --name "community/v-gen-lab/dengue/${name}" \\
         --output-dir nextclade_dataset
     """
 }
