@@ -15,15 +15,15 @@
 
 Daytona Dengue is Florida BPHL's Nextflow pipeline for Dengue virus (DENV) NGS data analysis. It processes paired-end Illumina reads through human read removal, quality control, adapter trimming, reference-based assembly, variant calling, serotype clade assignment and GenBank submission validation.
 
-Serotype detection (DENV1–4) is performed automatically via Kraken2 and coverage-based screening, and drives all downstream reference, primer, and annotation selection. Nextclade provides fine-grained clade assignment using the Hill et al. 2024 dengue lineage system (community/v-gen-lab datasets). VADR validates consensus sequences for GenBank submission.
+Serotype detection (DENV1–4) is performed automatically via Kraken2 and coverage-based screening, and drives all downstream reference, primer and annotation selection. Nextclade provides fine-grained clade assignment using the [Hill et al. 2024 dengue lineage system (community/v-gen-lab datasets)](https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3002834). VADR validates consensus sequences for GenBank submission.
 
 ### ⚙️ Dependencies
 
-- **Nextflow** 23.04–25.x — [installation guide](https://github.com/nextflow-io/nextflow)
-- **Apptainer/Singularity** — [installation guide](https://apptainer.org/docs/user/latest/)
-- **SLURM** workload manager (required for HiPerGator; optional otherwise)
+- **Nextflow** 23.04–25.x - [installation guide](https://github.com/nextflow-io/nextflow)
+- **Apptainer/Singularity** - [installation guide](https://apptainer.org/docs/user/latest/)
+- **SLURM** workload manager (required for HiPerGator; otherwise not required)
 
-All bioinformatics tools run inside containers — no additional software installation is required.
+All bioinformatics tools run inside containers, no additional software installation is required.
 
 > ⚠️ **Nextflow ≥ 26.0 is not supported.** That release introduced breaking changes to DSL2 module parsing. Use Nextflow 23.04–25.x.
 
@@ -50,10 +50,13 @@ output: "/full/path/to/output"
 
 Both `input` and `output` must be absolute paths with no trailing slash.
 
-> **FL-BPHL / HiPerGator users:** only `input` and `output` need to be set. All other paths are pre-configured in `nextflow.config`.
-> **Non FL-BPHL users:** uncomment the `kraken_db` line in `params.yaml` and set it to your local Kraken2 database directory.
+##### FL-BPHL users:** only `input` and `output` need to be set. All other paths are pre-configured in `nextflow.config`.
+
+##### Non FL-BPHL users:** uncomment the `kraken_db` line in `params.yaml` and set it to your local Kraken2 database directory. Kraken2 databases are available for download [here](https://benlangmead.github.io/aws-indexes/k2) 
 
 #### 2. Configure daytona_dengue.sh
+
+> At Florida BPHL we use **Apptainer** on HiPerGator. `daytona_dengue.sh` is pre-configured for SLURM + Apptainer and is the recommended submission method for FL-BPHL users.
 
 Set `NXF_APPTAINER_CACHEDIR` to your Apptainer image cache directory and add your email address for job notifications:
 
@@ -65,8 +68,6 @@ export NXF_APPTAINER_CACHEDIR=/path/to/apptainer/cache
 ### How to Run
 
 Place paired FASTQ files in the directory specified by `params.input`. Both Illumina native (`SAMPLE_S1_L001_R1_001.fastq.gz`) and simplified (`SAMPLE_1.fastq.gz`) naming conventions are supported.
-
-> At Florida BPHL we use **Apptainer** on HiPerGator. `daytona_dengue.sh` is pre-configured for SLURM + Apptainer on that cluster and is the recommended submission method for FL-BPHL users.
 
 ### 🐊 HiPerGator Usage
 
@@ -129,17 +130,17 @@ Daytona Dengue is made possible thanks to the following tools:
 
 <small>
 
-**Quality Control** — [FastQC](https://github.com/s-andrews/FastQC) 0.12.1 · [Trimmomatic](https://github.com/usadellab/Trimmomatic) 0.40 · [BBTools](https://github.com/bbushnell/BBTools) 39.84 · [MultiQC](https://github.com/MultiQC/MultiQC) 1.34
+**Quality Control**: [FastQC](https://github.com/s-andrews/FastQC) 0.12.1 · [Trimmomatic](https://github.com/usadellab/Trimmomatic) 0.40 · [BBTools](https://github.com/bbushnell/BBTools) 39.84 · [MultiQC](https://github.com/MultiQC/MultiQC) 1.34
 
-**Human Read Removal** — [NCBI SRA Human Scrubber](https://github.com/ncbi/sra-human-scrubber) 2.2.1
+**Human Read Removal**: [NCBI SRA Human Scrubber](https://github.com/ncbi/sra-human-scrubber) 2.2.1
 
-**Taxonomic Classification** — [Kraken2](https://github.com/DerrickWood/kraken2) 2.17.1
+**Taxonomic Classification**: [Kraken2](https://github.com/DerrickWood/kraken2) 2.17.1
 
-**Reference-Based Assembly** — [BWA](https://github.com/lh3/bwa) 0.7.19 · [Samtools](https://github.com/samtools/samtools) 1.23.1 · [iVar](https://github.com/andersen-lab/ivar) 1.4.4
+**Reference-Based Assembly**: [BWA](https://github.com/lh3/bwa) 0.7.19 · [Samtools](https://github.com/samtools/samtools) 1.23.1 · [iVar](https://github.com/andersen-lab/ivar) 1.4.4
 
-**Clade Assignment** — [Nextclade](https://github.com/nextstrain/nextclade) 3.21.2 · [v-gen-lab dengue datasets](https://github.com/nextstrain/nextclade_data/tree/master/data/community/v-gen-lab/dengue) (Hill et al. 2024)
+**Clade Assignment**: [Nextclade](https://github.com/nextstrain/nextclade) 3.21.2 · [v-gen-lab dengue datasets](https://github.com/nextstrain/nextclade_data/tree/master/data/community/v-gen-lab/dengue) (Hill et al. 2024)
 
-**Submission Validation** — [VADR](https://github.com/ncbi/vadr) 1.7
+**Submission Validation**: [VADR](https://github.com/ncbi/vadr) 1.7
 
 </small>
 

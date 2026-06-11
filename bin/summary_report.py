@@ -296,7 +296,7 @@ def main():
 
     header = [
         "sample_id", "serotype",
-        "nextclade_clade", "nextclade_qc_overall",
+        "nextclade_clade",
         "kraken2_percent",
         "reference", "start", "end",
         "num_raw_reads", "num_clean_reads", "num_mapped_reads", "percent_mapped_clean_reads",
@@ -336,6 +336,9 @@ def main():
         else:
             qf = qc.get(sid, "NA")
 
+        if vf == "NA" and qf.startswith("FAIL"):
+            vf = "FAIL"
+
         raw_reads   = trimstats.get(sid, "NA")
         clean_reads = phix_log.get(sid, "NA")
 
@@ -352,14 +355,10 @@ def main():
         called   = con.get("_seq_called", 0)
         pct_ref  = f"{(called / ref_len * 100):.4f}" if ref_len > 0 and not unclassified else "NA"
 
-        _nc_qc_raw = nc.get("qc.overallStatus", "NA") or "NA"
-        _nc_qc     = "error" if (_nc_qc_raw == "NA" and nc.get("errors", "").strip()) else _nc_qc_raw
-
         row = {
             "sample_id":                     sid,
             "serotype":                      sero,
-            "nextclade_clade":               nc.get("clade", "NA") or "NA",
-            "nextclade_qc_overall":          _nc_qc,
+            "nextclade_clade":               nc.get("clade", "") or "unclassified",
             "kraken2_percent":               k2,
             "reference":                     cov.get("reference", "NA"),
             "start":                         cov.get("start", "NA"),

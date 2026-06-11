@@ -3,16 +3,16 @@
 #SBATCH --qos=bphl-umbrella
 #SBATCH --job-name=daytona_dengue
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=40
-#SBATCH --mem=200gb
-#SBATCH --time=48:00:00
+#SBATCH --cpus-per-task=24
+#SBATCH --mem=100gb
+#SBATCH --time=04:00:00
 #SBATCH --output=daytona_dengue.%j.out
 #SBATCH --error=daytona_dengue.%j.err
 #SBATCH --mail-user=<EMAIL>
 #SBATCH --mail-type=FAIL,END
 
-module load conda nextflow apptainer
-conda activate PIPELINE_ENV
+module load conda apptainer nextflow/25.10.4
+conda activate daytona_dengue
 
 # Path to container image cache directory
 export NXF_APPTAINER_CACHEDIR=/path/to/apptainer/cache
