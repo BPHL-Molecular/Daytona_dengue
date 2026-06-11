@@ -1,5 +1,7 @@
-# input:  directory containing paired FASTQ files, absolute paths, no trailing slash
-# output: directory where all results will be written, absolute paths, no trailing slash
+# Input / Output absolute paths, no trailing slash "/"
 
 input:  "/full/path/to/fastqs"
 output: "/full/path/to/output"
+
+# Non FL-BPHL users: uncomment and set the path to your Kraken2 database
+# kraken_db: "/path/to/your/kraken2/database"

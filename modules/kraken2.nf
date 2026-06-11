@@ -10,7 +10,7 @@ process kraken2 {
     script:
     """
     kraken2 \\
-        --db /kraken2-db \\
+        --db ${params.kraken_db} \\
         --confidence 0.5 \\
         --threads ${task.cpus} \\
         --paired \\

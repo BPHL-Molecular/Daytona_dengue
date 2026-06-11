@@ -8,7 +8,7 @@
   <img src="https://img.shields.io/badge/Pipeline-Daytona%20Dengue-blue?style=plastic" />
   <img src="https://img.shields.io/badge/Nextflow-≥23.04-brightgreen?style=plastic&logo=nextflow" />
   <img src="https://img.shields.io/badge/Python-3.10+-yellow?style=plastic&logo=python" />
-  <img src="https://img.shields.io/badge/License-Apache%202.0-red?style=plastic" />
+  <img src="https://img.shields.io/badge/License-MIT-red?style=plastic" />
 </p>
 
 ## 🦟🧬 Overview
@@ -19,21 +19,23 @@ Serotype detection (DENV1–4) is performed automatically via Kraken2 and covera
 
 ### ⚙️ Dependencies
 
-- **Nextflow** ≥ 23.04 — [installation guide](https://github.com/nextflow-io/nextflow)
+- **Nextflow** 23.04–25.x — [installation guide](https://github.com/nextflow-io/nextflow)
 - **Apptainer/Singularity** — [installation guide](https://apptainer.org/docs/user/latest/)
 - **SLURM** workload manager (required for HiPerGator; optional otherwise)
 
 All bioinformatics tools run inside containers — no additional software installation is required.
 
+> ⚠️ **Nextflow ≥ 26.0 is not supported.** That release introduced breaking changes to DSL2 module parsing. Use Nextflow 23.04–25.x.
+
 ### 💻 Resource Requirements
 
 Daytona Dengue is designed to run on an HPC environment but can run locally with sufficient resources.
 
-- **CPUs:** 40 recommended (HPC); minimum 8
-- **RAM:** 200 GB recommended (HPC); 32 GB minimum (Kraken2 requires ~32 GB alone)
-- **Disk:** ~5 GB per sample (input + output); ~8–32 GB for the Kraken2 viral database
+- **CPUs:** 24 recommended; minimum 8
+- **RAM:** 100 GB recommended; minimum 50 GB (Kraken2 requires ~50 GB to hold the broad database in memory)
+- **Disk:** ~2–3 GB per sample (input + output); ~43 GB for the FL-BPHL Kraken2 database
 
-**Estimated runtime** (18 samples, 40 CPUs, HPC): ~2–3 hours, dominated by Kraken2 and BWA alignment.
+**Estimated runtime** (18 samples, 24 CPUs, 100 GB RAM, HPC): ~26 minutes.
 
 ### 🛠️ Setup
 
@@ -48,8 +50,8 @@ output: "/full/path/to/output"
 
 Both `input` and `output` must be absolute paths with no trailing slash.
 
-> **HiPerGator users:** only `input` and `output` need to be set. All other paths are pre-configured in `nextflow.config`.
-> **Non-HiPerGator users:** set `params.kraken_db` in `nextflow.config` (or add it to `params.yaml`) to point to your local Kraken2 viral database directory.
+> **FL-BPHL / HiPerGator users:** only `input` and `output` need to be set. All other paths are pre-configured in `nextflow.config`.
+> **Non FL-BPHL users:** uncomment the `kraken_db` line in `params.yaml` and set it to your local Kraken2 database directory.
 
 #### 2. Configure daytona_dengue.sh
 
@@ -63,6 +65,8 @@ export NXF_APPTAINER_CACHEDIR=/path/to/apptainer/cache
 ### How to Run
 
 Place paired FASTQ files in the directory specified by `params.input`. Both Illumina native (`SAMPLE_S1_L001_R1_001.fastq.gz`) and simplified (`SAMPLE_1.fastq.gz`) naming conventions are supported.
+
+> At Florida BPHL we use **Apptainer** on HiPerGator. `daytona_dengue.sh` is pre-configured for SLURM + Apptainer on that cluster and is the recommended submission method for FL-BPHL users.
 
 ### 🐊 HiPerGator Usage
 
@@ -83,46 +87,40 @@ nextflow run daytona_dengue.nf -profile docker -params-file params.yaml
 ### Workflow Diagram
 
 ```mermaid
-flowchart LR
-    A[Paired FASTQ Input] --> B[FastQC]
-    A --> HS[Human Scrubber]
-    HS --> C[Trimmomatic]
-    C --> D[BBTools\nadapters]
-    D --> E[BBTools\nPhiX]
-    E --> F[FastQC clean]
-    B --> MQ[MultiQC]
-    F --> MQ
+flowchart TD
+    A([Paired FASTQ Input]) --> B[FASTQC<br/>Raw Read QC]
+    A --> C[HUMAN SCRUBBER<br/>Human Read Removal]
+    C --> D[TRIMMOMATIC<br/>Quality Trimming]
+    D --> E[BBTOOLS<br/>Adapter & PhiX Removal]
+    E --> F[FASTQC<br/>Clean Read QC]
+    B --> G[MULTIQC<br/>Aggregate QC Report]
+    F --> G
+    E --> H[KRAKEN2<br/>Taxonomic Classification]
+    E --> I[BWA<br/>Align to All 4 DENV References]
+    I --> J[SAMTOOLS<br/>Per-Reference Coverage Screen]
+    J --> K{SEROTYPE DETECT<br/>Select Best Reference}
+    K -->|unclassified| L[Excluded from assembly<br/>Reported as FAIL]
+    K -->|DENV 1-4| M[SAMTOOLS<br/>BAM Processing]
+    M --> N[IVAR<br/>Primer Trimming]
+    N --> O[SAMTOOLS<br/>Post-Trim Coverage]
+    N --> P[SAMTOOLS<br/>Mpileup]
+    P --> Q[IVAR<br/>Variant Calling]
+    P --> R[IVAR<br/>Consensus Generation]
+    R --> S{QC GATE<br/>80% genome - 30x depth}
+    S -->|PASS| T[VADR<br/>GenBank Annotation Validation]
+    S -->|PASS| U[NEXTCLADE<br/>Clade Assignment]
+    S -->|FAIL| V[SUMMARY REPORT<br/>summary_report.txt]
+    T --> V
+    U --> V
+    H --> V
+    O --> V
+    L --> V
 
-    E --> K[Kraken2]
-    E --> BWA[BWA\n4× DENV refs]
-    BWA --> SS[Samtools screen\ncoverage]
-    SS --> SD[Serotype Detect]
-
-    SD --> |DENV1-4| SB[Samtools BAM\nwinning ref]
-    SB --> IT[iVar trim]
-    IT --> SC[Samtools coverage]
-    IT --> SM[Samtools mpileup]
-    SM --> IV[iVar variants]
-    SM --> IC[iVar consensus]
-    IC --> QG[QC Gate]
-
-    QG --> |PASS| VD[VADR]
-    QG --> |PASS| NC[Nextclade\nper-serotype dataset]
-
-    K --> SR[summary_report]
-    SD --> SR
-    SC --> SR
-    IC --> SR
-    NC --> SR
-    VD --> SR
-    QG --> SR
-    SR --> OUT[summary_report.txt]
-
-    style SD fill:#fef,stroke:#333,color:#000
-    style NC fill:#9cf,stroke:#333,color:#000
-    style VD fill:#9cf,stroke:#333,color:#000
-    style SR fill:#f96,stroke:#333,stroke-width:2px,color:#000
-    style OUT fill:#f96,stroke:#333,stroke-width:3px,color:#000
+    style A fill:#e1f5e1,color:#000
+    style K fill:#fff4e1,color:#000
+    style S fill:#fff4e1,color:#000
+    style L fill:#ffe1e1,color:#000
+    style V fill:#e1e5ff,color:#000,stroke-width:2px
 ```
 
 ### 🧩 Modules
@@ -166,7 +164,7 @@ output/
 
 | File | Samples | Key fields |
 |------|---------|------------|
-| `summary_report.txt` | All (including unclassified) | sample_id · serotype · nextclade_clade · nextclade_qc_overall · kraken2_percent · reference · coverage stats · assembly stats · VADR_flag · QC_flag |
+| `summary_report.txt` | All (including unclassified) | sample_id · serotype · nextclade_clade · kraken2_percent · reference · coverage stats · assembly stats · VADR_flag · QC_flag |
 
 ### 📁 Directory Structure
 
@@ -196,4 +194,4 @@ We welcome contributions to make Daytona Dengue better! Feel free to open issues
 
 ### ⚖️ License
 
-Daytona Dengue is licensed under the [Apache License 2.0](LICENSE).
+Daytona Dengue is licensed under the [MIT License](LICENSE).
