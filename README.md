@@ -21,7 +21,9 @@ Serotype detection (DENV1–4) is performed automatically via Kraken2 and covera
 
 - **Nextflow** 23.04–25.x - [installation guide](https://github.com/nextflow-io/nextflow)
 - **Apptainer/Singularity** - [installation guide](https://apptainer.org/docs/user/latest/)
+- **Conda** - [installation guide](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html)
 - **SLURM** workload manager (required for HiPerGator; otherwise not required)
+
 
 All bioinformatics tools run inside containers, no additional software installation is required.
 
@@ -32,14 +34,21 @@ All bioinformatics tools run inside containers, no additional software installat
 Daytona Dengue is designed to run on an HPC environment but can run locally with sufficient resources.
 
 - **CPUs:** 24 recommended; minimum 8
-- **RAM:** 100 GB recommended; minimum 50 GB (Kraken2 requires ~50 GB to hold the broad database in memory)
-- **Disk:** ~2–3 GB per sample (input + output); ~43 GB for the FL-BPHL Kraken2 database
+- **RAM:** 100 GB recommended; minimum 32 GB
+- **Disk:** ~2–3 GB per sample (input + output)
 
 **Estimated runtime** (18 samples, 24 CPUs, 100 GB RAM, HPC): ~26 minutes.
 
 ### 🛠️ Setup
 
-#### 1. Configure params.yaml
+#### 1. Create the conda environment
+
+```bash
+$ conda create -n daytona_dengue -c conda-forge python=3.10
+
+```
+
+#### 2. Configure params.yaml
 
 Edit `params.yaml` and set the input and output paths for your run:
 
@@ -50,13 +59,9 @@ output: "/full/path/to/output"
 
 Both `input` and `output` must be absolute paths with no trailing slash.
 
-##### FL-BPHL users:** only `input` and `output` need to be set. All other paths are pre-configured in `nextflow.config`.
+#### 3. Configure daytona_dengue.sh
 
-##### Non FL-BPHL users:** uncomment the `kraken_db` line in `params.yaml` and set it to your local Kraken2 database directory. Kraken2 databases are available for download [here](https://benlangmead.github.io/aws-indexes/k2) 
-
-#### 2. Configure daytona_dengue.sh
-
-> At Florida BPHL we use **Apptainer** on HiPerGator. `daytona_dengue.sh` is pre-configured for SLURM + Apptainer and is the recommended submission method for FL-BPHL users.
+> At Florida BPHL we use **Apptainer** on HiPerGator for containerization. `daytona_dengue.sh` is pre-configured for SLURM + Apptainer and is the recommended submission method for FL-BPHL users.
 
 Set `NXF_APPTAINER_CACHEDIR` to your Apptainer image cache directory and add your email address for job notifications:
 

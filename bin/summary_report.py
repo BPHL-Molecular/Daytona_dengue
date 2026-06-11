@@ -303,7 +303,7 @@ def main():
         "cov_bases_mapped", "percent_genome_cov_map",
         "mean_depth", "mean_base_qual", "mean_map_qual",
         "assembly_length", "numN", "percent_ref_genome_cov",
-        "VADR_flag", "QC_flag",
+        "vadr_flag", "qc_flag",
     ]
 
     _REF_SERO = {
@@ -328,9 +328,9 @@ def main():
             _best_pct  = cov.get("percent_genome_cov_map")
             _best_sero = _REF_SERO.get((cov.get("reference") or "").split()[0], "")
             if _best_pct and _best_sero:
-                qf = f"FAIL: Unclassified (best: {float(_best_pct):.1f}% {_best_sero})"
+                qf = f"FAIL: Low coverage (best: {float(_best_pct):.1f}% {_best_sero})"
             elif _best_pct:
-                qf = f"FAIL: Unclassified (best coverage: {float(_best_pct):.1f}%)"
+                qf = f"FAIL: Low coverage (best: {float(_best_pct):.1f}%)"
             else:
                 qf = "FAIL: Unclassified"
         else:
@@ -375,8 +375,8 @@ def main():
             "assembly_length":               con.get("assembly_length", "NA"),
             "numN":                          con.get("numN", "NA"),
             "percent_ref_genome_cov":        pct_ref,
-            "VADR_flag":                     vf,
-            "QC_flag":                       qf,
+            "vadr_flag":                     vf,
+            "qc_flag":                       qf,
         }
         rows.append(row)
 
