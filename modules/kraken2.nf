@@ -11,7 +11,6 @@ process kraken2 {
     """
     kraken2 \\
         --db /kraken2-db \\
-        --confidence 0.5 \\
         --threads ${task.cpus} \\
         --paired \\
         --output /dev/null \\

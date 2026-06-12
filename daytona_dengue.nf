@@ -3,7 +3,7 @@
 /*
   Daytona Dengue
   Florida's BPHL Nextflow pipeline for Dengue virus NGS data analysis
-  Authors: Yibo Dong, Arnold Rodriguez
+  Authors: Yibo Dong, Arnold Rodriguez, Molly Mitchell
   Email: bphl-sebioinformatics@flhealth.gov
 */
 

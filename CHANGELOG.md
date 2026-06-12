@@ -4,7 +4,21 @@ All notable changes to the Daytona Dengue pipeline will be documented in this fi
 
 ---
 
-## [Unreleased] — BPHL GitHub SOP Format Refactor
+## [Unreleased] — Post-refactor improvements
+
+### Changed
+
+- `modules/kraken2.nf` — reverted to bundled viral container (`staphb/kraken2:2.17.1-viral-20251015`); removed `--confidence` filter
+- `nextflow.config` — reduced Kraken2 memory from 50 GB to 8 GB
+- `modules/nextclade.nf` — switched to per-serotype community datasets (`community/v-gen-lab/dengue/denv1–4`)
+- `bin/summary_report.py` — renamed `VADR_flag`/`QC_flag` → `vadr_flag`/`qc_flag`; removed `nextclade_qc_overall` column; improved unclassified/low-coverage QC message; VADR flag derived from QC flag for samples that never reached VADR
+- `bin/qc_gate.py` — updated QC coverage threshold; depth fail message now shows actual observed depth
+- `README.md` — corrected resource requirements; added conda setup step; added Nextflow version constraint note (≥23.04, <26.0); removed estimated runtime
+- `daytona_dengue.sh` — updated SLURM resource allocation
+
+---
+
+## [Unreleased] — SOP Format Refactor
 
 ### Added
 
