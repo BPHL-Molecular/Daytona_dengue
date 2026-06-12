@@ -34,7 +34,7 @@ All bioinformatics tools run inside containers, no additional software installat
 Daytona Dengue is designed to run on an HPC environment but can run locally with sufficient resources.
 
 - **CPUs:** 24 recommended; minimum 8
-- **RAM:** 100 GB recommended; minimum 32 GB
+- **RAM:** 50 GB recommended; minimum 16 GB
 - **Disk:** ~2–3 GB per sample (input + output)
 
 **Estimated runtime** (18 samples, 24 CPUs, 100 GB RAM, HPC): ~26 minutes.

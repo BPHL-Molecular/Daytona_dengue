@@ -5,17 +5,14 @@ qc_gate.py — Compute QC pass/fail for a dengue consensus assembly.
 Reads samtools coverage output and the consensus FASTA.
 Writes a 2-column TSV: sample_id, qc_flag.
 
-This script exists solely to produce the QC decision needed to gate
-downstream VADR annotation. All full reporting is handled by summary_report.py.
-
-QC thresholds (hardcoded):
-    percent_ref_genome_cov >= 80%  AND  mean_depth >= 30x  → PASS
+QC thresholds:
+    percent_ref_genome_cov >= 5%  AND  mean_depth >= 30x  → PASS
 """
 
 import argparse
 import sys
 
-QC_MIN_COVERAGE = 80.0
+QC_MIN_COVERAGE = 5.0
 QC_MIN_DEPTH    = 30.0
 
 
@@ -56,7 +53,7 @@ def main():
     if pct_genome < QC_MIN_COVERAGE:
         flag = f"FAIL: Percent genome < {int(QC_MIN_COVERAGE)}%"
     elif mean_depth < QC_MIN_DEPTH:
-        flag = f"FAIL: Mean read depth < {int(QC_MIN_DEPTH)}x"
+        flag = f"FAIL: Low depth ({mean_depth:.1f}x)"
     else:
         flag = 'PASS'
 
