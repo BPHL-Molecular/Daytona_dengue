@@ -151,7 +151,7 @@ Daytona Dengue is made possible thanks to the following tools:
 
 Per-sample results are written to `params.output/<sample_id>/`. A single summary file is written to `params.output/`:
 
-```
+```markdown
 output/
 ├── <sample_id>/
 │   ├── fastqc/
