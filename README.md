@@ -170,24 +170,6 @@ output/
 |------|---------|------------|
 | `summary_report.txt` | All (including unclassified) | sample_id · serotype · nextclade_clade · kraken2_percent · reference · coverage stats · assembly stats · VADR_flag · QC_flag |
 
-### 📁 Directory Structure
-
-```text
-daytona_dengue/
-├── daytona_dengue.nf       # Entry workflow
-├── daytona_dengue.sh       # SLURM submission script
-├── nextflow.config         # Container, resource, and profile configuration
-├── params.yaml             # Runtime parameters (input/output paths)
-├── modules/                # One .nf file per tool or tool group
-├── bin/                    # Python helper scripts (QC gate, summary report)
-└── assets/
-    ├── reference/          # Reference FASTA + BWA indexes (DENV1–4)
-    ├── primers/            # Primer BED files (DENV1–4)
-    ├── annotations/        # Per-serotype GFF files (for iVar variants)
-    ├── nextclade/          # Cached Nextclade datasets (auto-downloaded)
-    └── vadr/               # Cached VADR models (auto-downloaded)
-```
-
 ### 🤝 Contributing
 
 We welcome contributions to make Daytona Dengue better! Feel free to open issues or submit pull requests to suggest additional features or enhancements.
