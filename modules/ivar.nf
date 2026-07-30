@@ -1,6 +1,6 @@
 process ivar_trim {
     tag "${meta.id}"
-    publishDir "${params.output}/${meta.id}/ivar", mode: 'copy'
+    publishDir { "${params.output}/${meta.id}/ivar" }, mode: 'copy'
 
     input:
         tuple val(meta), path(bam), path(bai), path(primer)
@@ -25,7 +25,7 @@ process ivar_trim {
 
 process ivar_variants {
     tag "${meta.id}"
-    publishDir "${params.output}/${meta.id}/ivar", mode: 'copy'
+    publishDir { "${params.output}/${meta.id}/ivar" }, mode: 'copy'
 
     input:
         tuple val(meta), path(mpileup), path(reference), path(gff)
@@ -47,7 +47,7 @@ process ivar_variants {
 
 process ivar_consensus {
     tag "${meta.id}"
-    publishDir "${params.output}/${meta.id}/ivar", mode: 'copy'
+    publishDir { "${params.output}/${meta.id}/ivar" }, mode: 'copy'
 
     input:
         tuple val(meta), path(mpileup)
@@ -63,8 +63,6 @@ process ivar_consensus {
         -n N \\
         -p ${prefix}.consensus
 
-    # ivar names the sequence after the reference; rename to sample ID so
-    # downstream tools (Nextclade, summary_report.py) can match by sample ID
     sed -i "1s/^>.*/>${prefix}/" ${prefix}.consensus.fa
     """
 }

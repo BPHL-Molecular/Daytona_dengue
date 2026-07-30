@@ -1,6 +1,6 @@
 process serotype_detect {
     tag "${meta.id}"
-    publishDir "${params.output}/${meta.id}/serotype", mode: 'copy'
+    publishDir { "${params.output}/${meta.id}/serotype" }, mode: 'copy'
 
     input:
         tuple val(meta), path(coverage_files)

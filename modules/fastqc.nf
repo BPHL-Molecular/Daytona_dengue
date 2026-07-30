@@ -1,6 +1,6 @@
 process fastqc {
     tag "${meta.id}"
-    publishDir "${params.output}/${meta.id}/fastqc", mode: 'copy'
+    publishDir { "${params.output}/${meta.id}/fastqc" }, mode: 'copy'
 
     input:
         tuple val(meta), path(reads)
@@ -18,7 +18,7 @@ process fastqc {
 
 process fastqc_clean {
     tag "${meta.id}"
-    publishDir "${params.output}/${meta.id}/fastqc_clean", mode: 'copy'
+    publishDir { "${params.output}/${meta.id}/fastqc_clean" }, mode: 'copy'
 
     input:
         tuple val(meta), path(reads)

@@ -11,7 +11,7 @@
 #SBATCH --mail-user=<EMAIL>
 #SBATCH --mail-type=FAIL,END
 
-module load conda apptainer nextflow/25.10.4
+module load conda apptainer nextflow
 conda activate daytona_dengue
 
 # Path to container image cache directory
@@ -31,6 +31,3 @@ elif [ $nxf_exit -ne 0 ]; then
 else
     echo "Pipeline exited 0 but output directory not found: $output_dir" >&2
 fi
-
-# Cleanup (disabled for troubleshooting runs)
-#rm -rf ./work

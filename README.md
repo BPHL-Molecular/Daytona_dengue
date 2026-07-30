@@ -19,7 +19,7 @@ Serotype detection (DENV1–4) is performed automatically via Kraken2 and covera
 
 ### ⚙️ Dependencies
 
-- **Nextflow** 23.04–25.x - [installation guide](https://github.com/nextflow-io/nextflow)
+- **Nextflow** 23.04-26.x - [installation guide](https://github.com/nextflow-io/nextflow)
 - **Apptainer/Singularity** - [installation guide](https://apptainer.org/docs/user/latest/)
 - **Conda** - [installation guide](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html)
 - **SLURM** workload manager (required for HiPerGator; otherwise not required)
@@ -27,7 +27,7 @@ Serotype detection (DENV1–4) is performed automatically via Kraken2 and covera
 
 All bioinformatics tools run inside containers, no additional software installation is required.
 
-> ⚠️ **Nextflow ≥ 26.0 is not supported.** That release introduced breaking changes to DSL2 module parsing. Use Nextflow 23.04–25.x.
+> Nextflow 23.04-26.x are supported. Nextflow 26.04 made the v2 strict script parser the default; every `publishDir` in this pipeline uses the closure form that parser requires.
 
 ### 💻 Resource Requirements
 
@@ -61,7 +61,7 @@ Both `input` and `output` must be absolute paths with no trailing slash.
 
 > At Florida BPHL we use **Apptainer** on HiPerGator for containerization. `daytona_dengue.sh` is pre-configured for SLURM + Apptainer and is the recommended submission method for FL-BPHL users.
 
-Set `NXF_APPTAINER_CACHEDIR` to your Apptainer image cache directory and add your email address for job notifications:
+Add your email address for job notifications and set `NXF_APPTAINER_CACHEDIR` to your Apptainer image cache directory:
 
 ```bash
 export NXF_APPTAINER_CACHEDIR=/path/to/apptainer/cache
@@ -70,7 +70,7 @@ export NXF_APPTAINER_CACHEDIR=/path/to/apptainer/cache
 
 ### How to Run
 
-Place paired FASTQ files in the directory specified by `params.input`. Both Illumina native (`SAMPLE_S1_L001_R1_001.fastq.gz`) and simplified (`SAMPLE_1.fastq.gz`) naming conventions are supported.
+Place paired FASTQ files in the directory specified by `params.input`. Both Illumina native (`SAMPLE_S1_L001_R1_001.fastq.gz`) and simplified (`SAMPLE_1.fastq.gz`) naming conventions are supported. If no matching FASTQ files are found, the pipeline exits immediately with an error.
 
 ### 🐊 HiPerGator Usage
 
@@ -97,8 +97,6 @@ flowchart TD
     C --> D[TRIMMOMATIC<br/>Quality Trimming]
     D --> E[BBTOOLS<br/>Adapter & PhiX Removal]
     E --> F[FASTQC<br/>Clean Read QC]
-    B --> G[MULTIQC<br/>Aggregate QC Report]
-    F --> G
     E --> H[KRAKEN2<br/>Taxonomic Classification]
     E --> I[BWA<br/>Align to All 4 DENV References]
     I --> J[SAMTOOLS<br/>Per-Reference Coverage Screen]
@@ -110,22 +108,33 @@ flowchart TD
     N --> P[SAMTOOLS<br/>Mpileup]
     P --> Q[IVAR<br/>Variant Calling]
     P --> R[IVAR<br/>Consensus Generation]
-    R --> S{QC GATE<br/>80% genome - 30x depth}
+    R --> S{QC GATE<br/>Min Coverage & 30x Depth}
     S -->|PASS| T[VADR<br/>GenBank Annotation Validation]
     S -->|PASS| U[NEXTCLADE<br/>Clade Assignment]
     S -->|FAIL| V[SUMMARY REPORT<br/>summary_report.txt]
+    T -->|PASS| W[ASSEMBLIES QC PASS<br/>assemblies_qc_pass/]
     T --> V
     U --> V
     H --> V
     O --> V
     L --> V
+    V --> G[DAYTONA DENGUE REPORT<br/>Interactive Dashboard]
+    B --> G
+    F --> G
+    B --> SM[MULTIQC<br/>Per-sample: Raw + Clean FastQC]
+    F --> SM
 
     style A fill:#e1f5e1,color:#000
     style K fill:#fff4e1,color:#000
     style S fill:#fff4e1,color:#000
     style L fill:#ffe1e1,color:#000
     style V fill:#e1e5ff,color:#000,stroke-width:2px
+    style W fill:#e1f5e1,color:#000,stroke-width:2px
+    style G fill:#e1e5ff,color:#000,stroke-width:2px
+    style SM fill:#e1e5ff,color:#000
 ```
+
+> **QC GATE vs. assembly validation:** The **QC GATE** (`qc_flag`) is a minimum coverage (5%) and read-depth check (mean depth ≥ 30×) that confirms a sample's serotype classification is backed by enough on-target data, it is a serotype-classification QC, **not** a final assembly verdict, which is useful for surveillance purposes. Genome **assembly QC is performed by VADR**: a VADR **PASS** (`vadr_flag`) marks a submission-ready consensus, which is collected in `assemblies_qc_pass/`.
 
 ### 🧩 Modules
 
@@ -133,7 +142,7 @@ Daytona Dengue is made possible thanks to the following tools:
 
 <small>
 
-**Quality Control**: [FastQC](https://github.com/s-andrews/FastQC) 0.12.1 · [Trimmomatic](https://github.com/usadellab/Trimmomatic) 0.40 · [BBTools](https://github.com/bbushnell/BBTools) 39.84 · [MultiQC](https://github.com/MultiQC/MultiQC) 1.34
+**Quality Control**: [FastQC](https://github.com/s-andrews/FastQC) 0.12.1 · [Trimmomatic](https://github.com/usadellab/Trimmomatic) 0.40 · [BBTools](https://github.com/bbushnell/BBTools) 39.84 · [MultiQC](https://github.com/MultiQC/MultiQC) 1.34 (interactive run-level dashboard + per-sample)
 
 **Human Read Removal**: [NCBI SRA Human Scrubber](https://github.com/ncbi/sra-human-scrubber) 2.2.1
 
@@ -161,14 +170,18 @@ output/
 │   ├── samtools/
 │   ├── ivar/
 │   ├── vadr/
-│   └── nextclade/
-├── multiqc/
+│   ├── nextclade/
+│   └── multiqc/          # per-sample MultiQC (raw + clean FastQC)
+├── assemblies_qc_pass/
+├── daytona_dengue_report.html   # interactive run-level dashboard
 └── summary_report.txt
 ```
 
 | File | Samples | Key fields |
 |------|---------|------------|
 | `summary_report.txt` | All (including unclassified) | sample_id · serotype · nextclade_clade · kraken2_percent · reference · coverage stats · assembly stats · VADR_flag · QC_flag |
+| `daytona_dengue_report.html` | All | Interactive dashboard: serotype/coverage QC, assembly/clade QC, clean-read FastQC, software versions |
+| `<sample_id>/multiqc/<sample_id>_multiqc_report.html` | Per sample | Raw + clean FastQC for that sample |
 
 ### 🤝 Contributing
 

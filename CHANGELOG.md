@@ -4,10 +4,49 @@ All notable changes to the Daytona Dengue pipeline will be documented in this fi
 
 ---
 
-## [Unreleased] — Post-refactor improvements
+## [Unreleased] - Custom MultiQC dashboard and Nextflow 26 support
+
+### Added
+
+- `assets/multiqc_config.yaml` and `assets/daytona_dengue_report.css` - branded, interactive
+  run-level MultiQC dashboard (`daytona_dengue_report.html`), replacing the generic aggregate
+  report previously published to `output/all_multiqc/`
+- `bin/summary_report.py` - `_mqc_preamble`/`_write_mqc`/`emit_daytona_mqc_tables` write
+  `daytona_dengue_serotype_mqc.tsv` and `daytona_dengue_assembly_mqc.tsv`, rendered as
+  sortable, color-coded tables (`qc_flag`, `vadr_flag`, `serotype` verdicts) in the dashboard
+- `modules/multiqc.nf` - `multiqc` process now stages the config/CSS/tables, writes an inline
+  Software Versions table from the container tags pinned in `nextflow.config`, and cleans up
+  the `_mqc.tsv` files after each run so a resumed run doesn't re-ingest stale tables
+- `manifest { nextflowVersion = '>=23.04' }` in `nextflow.config`
 
 ### Changed
 
+- All 23 `publishDir` directives across `modules/*.nf` rewritten from bare-string to closure
+  form (`publishDir { "..." }, mode: 'copy'`), required by the v2 strict script parser that
+  Nextflow 26.04 makes the default. The bare-string form evaluates the path at process-definition
+  time, before `meta` is in scope, raising `No such variable: meta` at module load
+- `daytona_dengue.nf` - `ch_barrier` gets `.ifEmpty(true)`, so a run where no sample reaches
+  `vadr`/`nextclade` (e.g. every sample fails serotyping) still triggers `summary_report`
+  instead of stalling with no error
+- `daytona_dengue.sh` - loads the default `nextflow` module instead of pinning `nextflow/25.10.4`
+- `README.md` - Nextflow support range updated to 23.04-26.x; output section reflects
+  `daytona_dengue_report.html` replacing `all_multiqc/`
+
+---
+
+## [Unreleased] — Post-refactor improvements
+
+### Added
+
+- Per-sample MultiQC (`multiqc_sample`) over each sample's raw + clean FastQC, published to
+  `output/<sample_id>/multiqc/`
+
+### Changed
+
+- Aggregate MultiQC output dir renamed to `output/all_multiqc/`; aggregate now runs with
+  `--ignore "*/multiqc/*" --ignore "*/all_multiqc/*"` so it no longer re-ingests MultiQC report/data dirs
+- `nextflow.config` compacted with regex `withName` selectors (`fastqc.*`, `bbtools.*`, `ivar.*`,
+  `samtools_(bam|coverage|mpileup)`); `samtools_screen` kept as its own block
 - `modules/kraken2.nf` — reverted to bundled viral container (`staphb/kraken2:2.17.1-viral-20251015`); removed `--confidence` filter
 - `nextflow.config` — reduced Kraken2 memory from 50 GB to 8 GB
 - `modules/nextclade.nf` — switched to per-serotype community datasets (`community/v-gen-lab/dengue/denv1–4`)

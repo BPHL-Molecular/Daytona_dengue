@@ -1,0 +1,64 @@
+# Daytona Dengue MultiQC dashboard configuration
+
+title: "Daytona Dengue: DENV NGS Analysis Report"
+intro_text: >
+  Interactive summary report (serotype ID, coverage QC, consensus assembly QC, clade assignment).
+
+report_header_info:
+  - Pipeline: "Daytona Dengue (https://github.com/BPHL-Molecular/Daytona_dengue)"
+  - Version: "v1.0.0"
+  - Contact: "bphl-sebioinformatics@flhealth.gov"
+  - Laboratory: "Florida Bureau of Public Health Laboratories"
+
+custom_css_files:
+  - "daytona_dengue_report.css"
+
+max_table_rows: 1
+
+skip_versions_section: true
+
+module_order:
+  - fastqc:
+      name: "FastQC (clean reads)"
+      anchor: "fastqc_clean"
+      path_filters:
+        - "*/fastqc_clean/*"
+
+remove_sections:
+  - "fastqc_clean_fastqc_clean_per_base_sequence_content"
+  - "fastqc_clean_fastqc_per_sequence_gc_content"
+  - "fastqc_clean_fastqc_per_base_n_content"
+  - "fastqc_clean_fastqc_sequence_length_distribution"
+  - "fastqc_clean_fastqc_overrepresented_sequences"
+  - "fastqc_clean_fastqc_top_overrepresented_sequences"
+
+report_section_order:
+  daytona_dengue_serotype: { order: 4000 }
+  daytona_dengue_assembly: { order: 3000 }
+  fastqc_clean:            { order: 2000 }
+  daytona_dengue_versions: { order: 1000 }
+
+custom_content:
+  order:
+    - daytona_dengue_serotype
+    - daytona_dengue_assembly
+    - daytona_dengue_versions
+
+table_cond_formatting_rules:
+  qc_flag:
+    pass:
+      - s_eq: "PASS"
+    fail:
+      - s_contains: "FAIL"
+
+  vadr_flag:
+    pass:
+      - s_eq: "PASS"
+    warn:
+      - s_eq: "REVIEW"
+    fail:
+      - s_contains: "FAIL"
+
+  serotype:
+    warn:
+      - s_eq: "unclassified"
