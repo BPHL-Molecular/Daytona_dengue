@@ -18,8 +18,10 @@ All notable changes to the Daytona Dengue pipeline will be documented in this fi
   Software Versions table from the container tags pinned in `nextflow.config`, and cleans up
   the `_mqc.tsv` files after each run so a resumed run doesn't re-ingest stale tables
 - `manifest { nextflowVersion = '>=23.04' }` in `nextflow.config`
-- `modules/fastqc.nf` - `fastqc` process renames its outputs to `<sample>_R{1,2}_raw_fastqc.*`,
-  so raw and clean reads collapse onto one General Statistics row per sample instead of two
+- `modules/fastqc.nf` - `fastqc` process symlinks its inputs to `<sample>_R{1,2}_raw.fastq.gz`
+  before running, so raw and clean reads collapse onto one General Statistics row per sample
+  instead of two. MultiQC keys FastQC rows off the `Filename` recorded inside `fastqc_data.txt`,
+  which follows the input name, so renaming the output zip has no effect
 
 ### Changed
 
