@@ -41,6 +41,13 @@ All notable changes to the Daytona Dengue pipeline will be documented in this fi
 - `README.md` - Nextflow support range updated to 23.04-26.x; output section reflects
   `daytona_dengue_report.html` replacing `all_multiqc/`, and the dashboard description reflects
   the renamed sections and dual FastQC columns
+- `bin/summary_report.py` and `bin/qc_gate.py` - `percent_genome_cov_map` renamed to
+  `percent_genome_cov_aligned` (breadth of coverage from the mapped BAM) and
+  `percent_ref_genome_cov` renamed to `percent_genome_cov_assembled` (completeness of the
+  final iVar consensus, the value `qc_flag` is actually thresholded on); the
+  Serotype/Clade and Coverage QC table now shows `percent_genome_cov_assembled` next to
+  `qc_flag` instead of `percent_genome_cov_aligned`, so the displayed number matches the
+  verdict it drives
 
 ---
 

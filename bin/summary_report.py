@@ -46,15 +46,15 @@ def load_coverage(coverage_dir):
         if len(cols) < 9:
             continue
         records[sid] = {
-            "reference":              cols[0],
-            "start":                  cols[1],
-            "end":                    cols[2],
-            "num_mapped_reads":       cols[3],
-            "cov_bases_mapped":       cols[4],
-            "percent_genome_cov_map": cols[5],
-            "mean_depth":             cols[6],
-            "mean_base_qual":         cols[7],
-            "mean_map_qual":          cols[8],
+            "reference":                  cols[0],
+            "start":                      cols[1],
+            "end":                        cols[2],
+            "num_mapped_reads":           cols[3],
+            "cov_bases_mapped":           cols[4],
+            "percent_genome_cov_aligned": cols[5],
+            "mean_depth":                 cols[6],
+            "mean_base_qual":             cols[7],
+            "mean_map_qual":              cols[8],
         }
     return records
 
@@ -92,15 +92,15 @@ def load_screen_coverage(screen_cov_dir):
                 best_cols = cols
         if best_cols:
             records[sid] = {
-                "reference":              best_cols[0],
-                "start":                  best_cols[1],
-                "end":                    best_cols[2],
-                "num_mapped_reads":       best_cols[3],
-                "cov_bases_mapped":       best_cols[4],
-                "percent_genome_cov_map": best_cols[5],
-                "mean_depth":             best_cols[6],
-                "mean_base_qual":         best_cols[7],
-                "mean_map_qual":          best_cols[8],
+                "reference":                  best_cols[0],
+                "start":                      best_cols[1],
+                "end":                        best_cols[2],
+                "num_mapped_reads":           best_cols[3],
+                "cov_bases_mapped":           best_cols[4],
+                "percent_genome_cov_aligned": best_cols[5],
+                "mean_depth":                 best_cols[6],
+                "mean_base_qual":             best_cols[7],
+                "mean_map_qual":              best_cols[8],
             }
     return records
 
@@ -251,9 +251,9 @@ def main():
         "kraken2_percent",
         "reference", "start", "end",
         "num_raw_reads", "num_clean_reads", "num_mapped_reads", "percent_mapped_clean_reads",
-        "cov_bases_mapped", "percent_genome_cov_map",
+        "cov_bases_mapped", "percent_genome_cov_aligned",
         "mean_depth", "mean_base_qual", "mean_map_qual",
-        "assembly_length", "numN", "percent_ref_genome_cov",
+        "assembly_length", "numN", "percent_genome_cov_assembled",
         "vadr_flag", "qc_flag",
     ]
 
@@ -276,7 +276,7 @@ def main():
         k2  = kraken2.get(sid, "NA")
 
         if unclassified:
-            _best_pct  = cov.get("percent_genome_cov_map")
+            _best_pct  = cov.get("percent_genome_cov_aligned")
             _best_sero = _REF_SERO.get((cov.get("reference") or "").split()[0], "")
             if _best_pct and _best_sero:
                 qf = f"FAIL: Low coverage (best: {float(_best_pct):.1f}% {_best_sero})"
@@ -319,13 +319,13 @@ def main():
             "num_mapped_reads":              mapped,
             "percent_mapped_clean_reads":    pct_mapped,
             "cov_bases_mapped":              cov.get("cov_bases_mapped", "NA"),
-            "percent_genome_cov_map":        cov.get("percent_genome_cov_map", "NA"),
+            "percent_genome_cov_aligned":    cov.get("percent_genome_cov_aligned", "NA"),
             "mean_depth":                    cov.get("mean_depth", "NA"),
             "mean_base_qual":                cov.get("mean_base_qual", "NA"),
             "mean_map_qual":                 cov.get("mean_map_qual", "NA"),
             "assembly_length":               con.get("assembly_length", "NA"),
             "numN":                          con.get("numN", "NA"),
-            "percent_ref_genome_cov":        pct_ref,
+            "percent_genome_cov_assembled":  pct_ref,
             "vadr_flag":                     vf,
             "qc_flag":                       qf,
         }
@@ -398,9 +398,9 @@ def _write_mqc(path, preamble_lines, header, rows):
 
 
 DAYTONA_SEROTYPE_HEADER = ['sample_id', 'serotype', 'nextclade_clade', 'mean_depth',
-                           'percent_genome_cov_map', 'qc_flag']
+                           'percent_genome_cov_assembled', 'qc_flag']
 DAYTONA_ASSEMBLY_HEADER = ['sample_id', 'assembly_length', 'numN',
-                           'percent_ref_genome_cov', 'vadr_flag']
+                           'percent_genome_cov_assembled', 'vadr_flag']
 
 
 def emit_daytona_mqc_tables(rows):
