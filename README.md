@@ -92,47 +92,26 @@ nextflow run daytona_dengue.nf -profile apptainer -params-file params.yaml
 ### Workflow Diagram
 
 ```mermaid
-flowchart TD
-    A([Paired FASTQ Input]) --> B[FASTQC<br/>Raw Read QC]
-    A --> C[HUMAN SCRUBBER<br/>Human Read Removal]
-    C --> D[TRIMMOMATIC<br/>Quality Trimming]
-    D --> E[BBTOOLS<br/>Adapter & PhiX Removal]
-    E --> F[FASTQC<br/>Clean Read QC]
-    E --> H[KRAKEN2<br/>Taxonomic Classification]
-    E --> I[BWA<br/>Align to All 4 DENV References]
-    I --> J[SAMTOOLS<br/>Per-Reference Coverage Screen]
-    J --> K{SEROTYPE DETECT<br/>Select Best Reference}
-    K -->|unclassified| L[Excluded from assembly<br/>Reported as FAIL]
-    K -->|DENV 1-4| M[SAMTOOLS<br/>BAM Processing]
-    M --> N[IVAR<br/>Primer Trimming]
-    N --> O[SAMTOOLS<br/>Post-Trim Coverage]
-    N --> P[SAMTOOLS<br/>Mpileup]
-    P --> Q[IVAR<br/>Variant Calling]
-    P --> R[IVAR<br/>Consensus Generation]
-    R --> S{QC GATE<br/>Min Coverage & 30x Depth}
-    S -->|PASS| T[VADR<br/>GenBank Annotation Validation]
-    S -->|PASS| U[NEXTCLADE<br/>Clade Assignment]
-    S -->|FAIL| V[SUMMARY REPORT<br/>summary_report.txt]
-    T -->|PASS| W[ASSEMBLIES QC PASS<br/>assemblies_qc_pass/]
-    T --> V
-    U --> V
-    H --> V
-    O --> V
-    L --> V
-    V --> G[DAYTONA DENGUE REPORT<br/>Interactive Dashboard]
-    B --> G
-    F --> G
-    B --> SM[MULTIQC<br/>Per-sample: Raw + Clean FastQC]
-    F --> SM
+flowchart LR
+    IN[Paired FASTQ] --> QC["Read QC and cleaning<br/>FastQC · Human Scrubber · Trimmomatic · BBTools"]
+    QC --> SER["Serotype selection<br/>Kraken2 · BWA · Samtools coverage screen"]
+    SER --> ASM["Assembly<br/>Samtools · iVar"]
+    ASM --> VAL["Coverage QC and clade validation<br/>QC Gate · Nextclade · VADR"]
 
-    style A fill:#e1f5e1,color:#000
-    style K fill:#fff4e1,color:#000
-    style S fill:#fff4e1,color:#000
-    style L fill:#ffe1e1,color:#000
-    style V fill:#e1e5ff,color:#000,stroke-width:2px
-    style W fill:#e1f5e1,color:#000,stroke-width:2px
-    style G fill:#e1e5ff,color:#000,stroke-width:2px
-    style SM fill:#e1e5ff,color:#000
+    QC --> REP[summary_report]
+    SER --> REP
+    ASM --> REP
+    VAL --> REP
+
+    VAL --> AQP[assemblies_qc_pass/]
+    REP --> OUT[summary_report.txt]
+    REP --> DASH[daytona_dengue_report.html]
+
+    style SER fill:#9f9,stroke:#333,color:#000
+    style REP fill:#f96,stroke:#333,stroke-width:2px,color:#000
+    style OUT fill:#f96,stroke:#333,color:#000
+    style DASH fill:#f96,stroke:#333,color:#000
+    style AQP fill:#f96,stroke:#333,color:#000
 ```
 
 > **QC GATE vs. assembly validation:** The **QC GATE** (`qc_flag`) is a minimum coverage (5%) and read-depth check (mean depth ≥ 30×) that confirms a sample's serotype classification is backed by enough on-target data, it is a serotype-classification QC, **not** a final assembly verdict, which is useful for surveillance purposes. Genome **assembly QC is performed by VADR**: a VADR **PASS** (`vadr_flag`) marks a submission-ready consensus, which is collected in `assemblies_qc_pass/`.
