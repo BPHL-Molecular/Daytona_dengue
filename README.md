@@ -15,7 +15,7 @@
 
 Daytona Dengue is Florida BPHL's Nextflow pipeline for Dengue virus (DENV) NGS data analysis. It processes paired-end Illumina reads through human read removal, quality control, adapter trimming, reference-based assembly, variant calling, serotype clade assignment and GenBank submission validation.
 
-Serotype detection (DENV1–4) is performed automatically via Kraken2 and coverage-based screening, and drives all downstream reference, primer and annotation selection. Nextclade provides fine-grained clade assignment using the [Hill et al. 2024 dengue lineage system (community/v-gen-lab datasets)](https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3002834). VADR validates consensus sequences for GenBank submission.
+Serotype detection (DENV1–4) is performed automatically via Kraken2 and coverage-based screening and drives all downstream reference, primer and annotation selection. Nextclade provides fine-grained clade assignment using the [Hill et al. 2024 dengue lineage system (community/v-gen-lab datasets)](https://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.3002834). VADR validates consensus sequences for GenBank submission.
 
 ### ⚙️ Dependencies
 
@@ -24,10 +24,7 @@ Serotype detection (DENV1–4) is performed automatically via Kraken2 and covera
 - **Conda** - [installation guide](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html)
 - **SLURM** workload manager (required for HiPerGator; otherwise not required)
 
-
 All bioinformatics tools run inside containers, no additional software installation is required.
-
-> Nextflow 23.04-26.x are supported. Nextflow 26.04 made the v2 strict script parser the default; every `publishDir` in this pipeline uses the closure form that parser requires.
 
 ### 💻 Resource Requirements
 
@@ -39,14 +36,21 @@ Daytona Dengue is designed to run on an HPC environment but can run locally with
 
 ### 🛠️ Setup
 
-#### 1. Create the conda environment
+#### 1. Clone this repository and enter the repository directory
+
+```bash
+$ git clone https://github.com/BPHL-Molecular/Daytona_dengue
+
+$ cd Daytona_dengue/
+```
+
+#### 2. Create the conda environment
 
 ```bash
 $ conda create -n daytona_dengue -c conda-forge python=3.10
-
 ```
 
-#### 2. Configure params.yaml
+#### 3. Configure params.yaml
 
 Edit `params.yaml` and set the input and output paths for your run:
 
@@ -57,9 +61,9 @@ output: "/full/path/to/output"
 
 Both `input` and `output` must be absolute paths with no trailing slash.
 
-#### 3. Configure daytona_dengue.sh
+#### 4. Configure daytona_dengue.sh
 
-> At Florida BPHL we use **Apptainer** on HiPerGator for containerization. `daytona_dengue.sh` is pre-configured for SLURM + Apptainer and is the recommended submission method for FL-BPHL users.
+> At Florida BPHL we use **Apptainer** on HiPerGator for containerization. `daytona_dengue.sh` is pre-configured for SLURM + Apptainer and is the recommended submission method for HiPerGator users.
 
 Add your email address for job notifications and set `NXF_APPTAINER_CACHEDIR` to your Apptainer image cache directory:
 
@@ -83,9 +87,6 @@ sbatch daytona_dengue.sh
 ```bash
 # Apptainer/Singularity
 nextflow run daytona_dengue.nf -profile apptainer -params-file params.yaml
-
-# Docker
-nextflow run daytona_dengue.nf -profile docker -params-file params.yaml
 ```
 
 ### Workflow Diagram
@@ -142,7 +143,7 @@ Daytona Dengue is made possible thanks to the following tools:
 
 <small>
 
-**Quality Control**: [FastQC](https://github.com/s-andrews/FastQC) 0.12.1 · [Trimmomatic](https://github.com/usadellab/Trimmomatic) 0.40 · [BBTools](https://github.com/bbushnell/BBTools) 39.84 · [MultiQC](https://github.com/MultiQC/MultiQC) 1.34 (interactive run-level dashboard + per-sample)
+**Quality Control**: [FastQC](https://github.com/s-andrews/FastQC) 0.12.1 · [Trimmomatic](https://github.com/usadellab/Trimmomatic) 0.40 · [BBTools](https://github.com/bbushnell/BBTools) 39.84 · [MultiQC](https://github.com/MultiQC/MultiQC) 1.34
 
 **Human Read Removal**: [NCBI SRA Human Scrubber](https://github.com/ncbi/sra-human-scrubber) 2.2.1
 
@@ -180,7 +181,7 @@ output/
 | File | Samples | Key fields |
 |------|---------|------------|
 | `summary_report.txt` | All (including unclassified) | sample_id · serotype · nextclade_clade · kraken2_percent · reference · coverage stats · assembly stats · VADR_flag · QC_flag |
-| `daytona_dengue_report.html` | All | Interactive dashboard: serotype/coverage QC, assembly/clade QC, clean-read FastQC, software versions |
+| `daytona_dengue_report.html` | All | Interactive dashboard: serotype/clade and coverage QC, assembly QC, raw and clean FastQC, software versions |
 | `<sample_id>/multiqc/<sample_id>_multiqc_report.html` | Per sample | Raw + clean FastQC for that sample |
 
 ### 🤝 Contributing

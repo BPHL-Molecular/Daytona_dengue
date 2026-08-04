@@ -8,7 +8,7 @@
 #SBATCH --time=04:00:00
 #SBATCH --output=daytona_dengue.%j.out
 #SBATCH --error=daytona_dengue.%j.err
-#SBATCH --mail-user=<EMAIL>
+#SBATCH --mail-user=your@email.gov
 #SBATCH --mail-type=FAIL,END
 
 module load conda apptainer nextflow
@@ -16,6 +16,9 @@ conda activate daytona_dengue
 
 # Path to container image cache directory
 export NXF_APPTAINER_CACHEDIR=/path/to/apptainer/cache
+
+# Plain text Nextflow log
+export NXF_ANSI_LOG=false
 
 # Run pipeline
 nextflow run daytona_dengue.nf -profile apptainer -params-file params.yaml

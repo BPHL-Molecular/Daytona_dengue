@@ -13,11 +13,26 @@ report_header_info:
 custom_css_files:
   - "daytona_dengue_report.css"
 
+extra_fn_clean_exts:
+  - "_raw"
+  - "_clean"
+
 max_table_rows: 1
 
 skip_versions_section: true
 
+exclude_modules:
+  - "bbmap"
+  - "kraken"
+  - "samtools"
+  - "trimmomatic"
+
 module_order:
+  - fastqc:
+      name: "FastQC (raw reads)"
+      anchor: "fastqc_raw"
+      path_filters:
+        - "*/fastqc/*"
   - fastqc:
       name: "FastQC (clean reads)"
       anchor: "fastqc_clean"
@@ -25,6 +40,18 @@ module_order:
         - "*/fastqc_clean/*"
 
 remove_sections:
+  - "fastqc_raw_fastqc_sequence_counts"
+  - "fastqc_raw_fastqc_per_base_sequence_quality"
+  - "fastqc_raw_fastqc_per_sequence_quality_scores"
+  - "fastqc_raw_fastqc_raw_per_base_sequence_content"
+  - "fastqc_raw_fastqc_per_sequence_gc_content"
+  - "fastqc_raw_fastqc_per_base_n_content"
+  - "fastqc_raw_fastqc_sequence_length_distribution"
+  - "fastqc_raw_fastqc_sequence_duplication_levels"
+  - "fastqc_raw_fastqc_overrepresented_sequences"
+  - "fastqc_raw_fastqc_top_overrepresented_sequences"
+  - "fastqc_raw_fastqc_adapter_content"
+  - "fastqc_raw_fastqc_status_checks"
   - "fastqc_clean_fastqc_clean_per_base_sequence_content"
   - "fastqc_clean_fastqc_per_sequence_gc_content"
   - "fastqc_clean_fastqc_per_base_n_content"
@@ -44,6 +71,22 @@ custom_content:
     - daytona_dengue_assembly
     - daytona_dengue_versions
 
+table_columns_placement:
+  "FastQC (raw reads)":
+    total_sequences: 100
+    median_sequence_length: 110
+    percent_gc: 120
+  "FastQC (clean reads)":
+    total_sequences: 200
+    median_sequence_length: 210
+    percent_gc: 220
+
+table_columns_visible:
+  "FastQC (raw reads)":
+    percent_duplicates: false
+  "FastQC (clean reads)":
+    percent_duplicates: false
+
 table_cond_formatting_rules:
   qc_flag:
     pass:
@@ -60,5 +103,14 @@ table_cond_formatting_rules:
       - s_contains: "FAIL"
 
   serotype:
+    pass:
+      - s_eq: "DENV1"
+      - s_eq: "DENV2"
+      - s_eq: "DENV3"
+      - s_eq: "DENV4"
+    warn:
+      - s_eq: "unclassified"
+
+  nextclade_clade:
     warn:
       - s_eq: "unclassified"

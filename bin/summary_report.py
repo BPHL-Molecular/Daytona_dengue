@@ -397,9 +397,9 @@ def _write_mqc(path, preamble_lines, header, rows):
     print(f"summary_report.py: wrote {path} ({len(rows)} sample(s))", file=sys.stderr)
 
 
-DAYTONA_SEROTYPE_HEADER = ['sample_id', 'serotype', 'kraken2_percent', 'mean_depth',
+DAYTONA_SEROTYPE_HEADER = ['sample_id', 'serotype', 'nextclade_clade', 'mean_depth',
                            'percent_genome_cov_map', 'qc_flag']
-DAYTONA_ASSEMBLY_HEADER = ['sample_id', 'nextclade_clade', 'assembly_length', 'numN',
+DAYTONA_ASSEMBLY_HEADER = ['sample_id', 'assembly_length', 'numN',
                            'percent_ref_genome_cov', 'vadr_flag']
 
 
@@ -409,8 +409,9 @@ def emit_daytona_mqc_tables(rows):
     _write_mqc(
         'daytona_dengue_serotype_mqc.tsv',
         _mqc_preamble(
-            'daytona_dengue_serotype', 'Serotype ID and Coverage QC',
-            'Kraken2/coverage-confirmed DENV serotype call with coverage-based QC verdict.',
+            'daytona_dengue_serotype', 'Serotype/Clade and Coverage QC',
+            'Kraken2/coverage-confirmed DENV serotype call, Nextclade clade assignment, and '
+            'coverage-based QC verdict.',
             pconfig={'id': 'daytona_dengue_serotype_table', 'col1_header': 'Sample',
                      'no_violin': True},
         ),
@@ -419,7 +420,7 @@ def emit_daytona_mqc_tables(rows):
     _write_mqc(
         'daytona_dengue_assembly_mqc.tsv',
         _mqc_preamble(
-            'daytona_dengue_assembly', 'Assembly and Clade QC',
+            'daytona_dengue_assembly', 'Assembly QC',
             'Consensus assembly completeness and VADR GenBank-submission verdict.',
             pconfig={'id': 'daytona_dengue_assembly_table', 'col1_header': 'Sample',
                      'no_violin': True},

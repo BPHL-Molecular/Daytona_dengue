@@ -18,6 +18,8 @@ All notable changes to the Daytona Dengue pipeline will be documented in this fi
   Software Versions table from the container tags pinned in `nextflow.config`, and cleans up
   the `_mqc.tsv` files after each run so a resumed run doesn't re-ingest stale tables
 - `manifest { nextflowVersion = '>=23.04' }` in `nextflow.config`
+- `modules/fastqc.nf` - `fastqc` process renames its outputs to `<sample>_R{1,2}_raw_fastqc.*`,
+  so raw and clean reads collapse onto one General Statistics row per sample instead of two
 
 ### Changed
 
@@ -29,8 +31,16 @@ All notable changes to the Daytona Dengue pipeline will be documented in this fi
   `vadr`/`nextclade` (e.g. every sample fails serotyping) still triggers `summary_report`
   instead of stalling with no error
 - `daytona_dengue.sh` - loads the default `nextflow` module instead of pinning `nextflow/25.10.4`
+- `assets/multiqc_config.yaml` - FastQC now runs twice (raw and clean reads), narrowing General
+  Statistics to six ordered metrics (Seqs, Median len, GC for each) and dropping the BBTools,
+  Kraken, Samtools and Trimmomatic sections and columns via `exclude_modules`; DENV1-4 serotype
+  calls colored green in `table_cond_formatting_rules`, matching the PASS coloring
+- `bin/summary_report.py` - `'Serotype ID and Coverage QC'` renamed to
+  `'Serotype/Clade and Coverage QC'` and gains `nextclade_clade`, dropping `kraken2_percent`;
+  `'Assembly and Clade QC'` renamed to `'Assembly QC'` and loses `nextclade_clade`
 - `README.md` - Nextflow support range updated to 23.04-26.x; output section reflects
-  `daytona_dengue_report.html` replacing `all_multiqc/`
+  `daytona_dengue_report.html` replacing `all_multiqc/`, and the dashboard description reflects
+  the renamed sections and dual FastQC columns
 
 ---
 
