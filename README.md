@@ -94,7 +94,7 @@ nextflow run daytona_dengue.nf -profile apptainer -params-file params.yaml
 ```mermaid
 flowchart LR
     IN[Paired FASTQ] --> QC["Read QC and cleaning<br/>FastQC · Human Scrubber · Trimmomatic · BBTools"]
-    QC --> SER["Serotype selection<br/>Kraken2 · BWA · Samtools coverage screen"]
+    QC --> SER["Serotype detection<br/>Kraken2 · BWA · Samtools"]
     SER --> ASM["Assembly<br/>Samtools · iVar"]
     ASM --> VAL["Coverage QC and clade validation<br/>QC Gate · Nextclade · VADR"]
 
