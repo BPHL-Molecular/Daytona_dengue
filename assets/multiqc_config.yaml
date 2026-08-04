@@ -117,3 +117,5 @@ table_cond_formatting_rules:
   nextclade_clade:
     warn:
       - s_eq: "unclassified"
+      - s_eq: "unassigned"
+      - s_eq: "Outgroup"
