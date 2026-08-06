@@ -15,11 +15,10 @@ include { fastqc; fastqc_clean             } from './modules/fastqc.nf'
 include { humanscrubber                    } from './modules/humanscrubber.nf'
 include { trimmomatic                      } from './modules/trimmomatic.nf'
 include { bbtools_adapters; bbtools_phix   } from './modules/bbtools.nf'
-include { multiqc                          } from './modules/multiqc.nf'
 include { kraken2                          } from './modules/kraken2.nf'
 include { bwa                              } from './modules/bwa.nf'
-include { serotype_detect                  } from './modules/serotype_detect.nf'
 include { samtools_screen                  } from './modules/samtools.nf'
+include { serotype_detect                  } from './modules/serotype_detect.nf'
 include { samtools_bam                     } from './modules/samtools.nf'
 include { samtools_coverage                } from './modules/samtools.nf'
 include { samtools_mpileup                 } from './modules/samtools.nf'
@@ -30,6 +29,7 @@ include { qc_gate                          } from './modules/qc_gate.nf'
 include { vadr_download; vadr              } from './modules/vadr.nf'
 include { nextclade_download; nextclade    } from './modules/nextclade.nf'
 include { summary_report                   } from './modules/summary_report.nf'
+include { multiqc; multiqc_sample          } from './modules/multiqc.nf'
 
 def refFileList(String sero) {
     def nameMap = [
@@ -64,6 +64,7 @@ workflow {
         def meta     = [ id: clean_id, single_end: false ]
         [ meta, files ]
     }
+    .ifEmpty { error "No paired FASTQ files found in ${params.input}. Expected filenames matching *_{1,2}.fastq.gz or *_R{1,2}_*.fastq.gz." }
 
     ch_sd_denv1 = channel.value(refFileList('DENV1'))
     ch_sd_denv2 = channel.value(refFileList('DENV2'))
@@ -77,11 +78,15 @@ workflow {
     bbtools_phix(bbtools_adapters.out.reads)
     fastqc_clean(bbtools_phix.out.reads)
 
-    ch_multiqc_input = fastqc.out.zip
-        .mix(fastqc_clean.out.zip)
-        .map { _meta, zip -> zip }
-        .collect()
-    multiqc(ch_multiqc_input)
+    ch_sample_fastqc = fastqc.out.zip
+        .map { meta, zips -> [ meta.id, meta, zips ] }
+        .join( fastqc_clean.out.zip.map { meta, zips -> [ meta.id, zips ] } )
+        .map { _id, meta, raw, clean ->
+            def raw_list   = raw   instanceof List ? raw   : [raw]
+            def clean_list = clean instanceof List ? clean : [clean]
+            [ meta, raw_list + clean_list ]
+        }
+    multiqc_sample(ch_sample_fastqc)
 
     kraken2(bbtools_phix.out.reads)
 
@@ -218,6 +223,7 @@ workflow {
         .map { _meta -> 1 }
         .collect()
         .map { _ids -> true }
+        .ifEmpty(true)
 
     summary_report(
         ch_barrier,
@@ -231,5 +237,13 @@ workflow {
         samtools_screen.out.coverage.flatMap                     { _meta, fs -> fs }.collect(),
         trimmomatic.out.stats.map                                { _meta, f -> f }.collect(),
         bbtools_phix.out.phix_log.map                            { _meta, f -> f }.collect()
+    )
+
+    multiqc(
+        summary_report.out.report,
+        channel.value(file("${projectDir}/assets/multiqc_config.yaml",       checkIfExists: true)),
+        channel.value(file("${projectDir}/assets/daytona_dengue_report.css", checkIfExists: true)),
+        channel.value(file("${projectDir}/nextflow.config",                  checkIfExists: true)),
+        summary_report.out.mqc_tables.ifEmpty([])
     )
 }

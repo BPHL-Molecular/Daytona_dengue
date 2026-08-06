@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-summary_report.py — Aggregate all per-sample pipeline outputs into a single
+summary_report.py - Aggregate all per-sample pipeline outputs into a single
 summary TXT (tab-separated).
 
 Usage:
@@ -9,16 +9,6 @@ Usage:
                       --serotype-dir <dir> --screen-cov-dir <dir>
                       --trimstat-dir <dir> --phix-log-dir <dir>
                       --output <summary_report.txt>
-
-All directories can be '.' when all files are staged flat in the work directory.
-
-Output columns:
-    sample_id, serotype, nextclade_clade, nextclade_qc_overall, kraken2_percent,
-    reference, start, end,
-    num_raw_reads, num_clean_reads, num_mapped_reads, percent_mapped_clean_reads,
-    cov_bases_mapped, percent_genome_cov_map, mean_depth, mean_base_qual, mean_map_qual,
-    assembly_length, numN, percent_ref_genome_cov,
-    VADR_flag, QC_flag
 """
 
 import argparse
@@ -29,12 +19,7 @@ import re
 import sys
 
 
-# ---------------------------------------------------------------------------
-# Loaders — each returns a dict keyed by sample_id
-# ---------------------------------------------------------------------------
-
 def load_serotype(serotype_dir):
-    """Read *_serotype.txt → {sample_id: serotype_str}."""
     records = {}
     for path in glob.glob(os.path.join(serotype_dir, "*_serotype.txt")):
         sid = os.path.basename(path).replace("_serotype.txt", "")
@@ -46,11 +31,6 @@ def load_serotype(serotype_dir):
 
 
 def load_coverage(coverage_dir):
-    """
-    Read *.coverage.txt files (from samtools_coverage, post-ivar).
-    Skips *_DENV?.coverage.txt files (those are from samtools_screen).
-    Returns {sample_id: dict_of_stats}.
-    """
     records = {}
     for path in glob.glob(os.path.join(coverage_dir, "*.coverage.txt")):
         fname = os.path.basename(path)
@@ -66,25 +46,20 @@ def load_coverage(coverage_dir):
         if len(cols) < 9:
             continue
         records[sid] = {
-            "reference":              cols[0],
-            "start":                  cols[1],
-            "end":                    cols[2],
-            "num_mapped_reads":       cols[3],
-            "cov_bases_mapped":       cols[4],
-            "percent_genome_cov_map": cols[5],
-            "mean_depth":             cols[6],
-            "mean_base_qual":         cols[7],
-            "mean_map_qual":          cols[8],
+            "reference":                  cols[0],
+            "start":                      cols[1],
+            "end":                        cols[2],
+            "num_mapped_reads":           cols[3],
+            "cov_bases_mapped":           cols[4],
+            "percent_genome_cov_aligned": cols[5],
+            "mean_depth":                 cols[6],
+            "mean_base_qual":             cols[7],
+            "mean_map_qual":              cols[8],
         }
     return records
 
 
 def load_screen_coverage(screen_cov_dir):
-    """
-    Read *_DENV?.coverage.txt files (from samtools_screen).
-    For each sample, pick the DENV reference with the highest mean depth.
-    Returns {sample_id: dict_of_stats} — used as fallback for unclassified samples.
-    """
     from collections import defaultdict
     sample_files = defaultdict(dict)
     for path in glob.glob(os.path.join(screen_cov_dir, "*_DENV?.coverage.txt")):
@@ -117,24 +92,20 @@ def load_screen_coverage(screen_cov_dir):
                 best_cols = cols
         if best_cols:
             records[sid] = {
-                "reference":              best_cols[0],
-                "start":                  best_cols[1],
-                "end":                    best_cols[2],
-                "num_mapped_reads":       best_cols[3],
-                "cov_bases_mapped":       best_cols[4],
-                "percent_genome_cov_map": best_cols[5],
-                "mean_depth":             best_cols[6],
-                "mean_base_qual":         best_cols[7],
-                "mean_map_qual":          best_cols[8],
+                "reference":                  best_cols[0],
+                "start":                      best_cols[1],
+                "end":                        best_cols[2],
+                "num_mapped_reads":           best_cols[3],
+                "cov_bases_mapped":           best_cols[4],
+                "percent_genome_cov_aligned": best_cols[5],
+                "mean_depth":                 best_cols[6],
+                "mean_base_qual":             best_cols[7],
+                "mean_map_qual":              best_cols[8],
             }
     return records
 
 
 def load_consensus(consensus_dir):
-    """
-    Read *.consensus.fa files.
-    Returns {sample_id: {assembly_length, numN, _seq_called}}.
-    """
     records = {}
     for path in glob.glob(os.path.join(consensus_dir, "*.consensus.fa")):
         sid = os.path.basename(path).replace(".consensus.fa", "")
@@ -153,7 +124,6 @@ def load_consensus(consensus_dir):
 
 
 def load_nextclade(nextclade_dir):
-    """Read *_nextclade.tsv files → {seqName: row}."""
     records = {}
     for path in glob.glob(os.path.join(nextclade_dir, "*_nextclade.tsv")):
         with open(path, newline="") as fh:
@@ -166,7 +136,6 @@ def load_nextclade(nextclade_dir):
 
 
 def load_vadr(vadr_dir):
-    """Walk VADR result dirs → {sample_id: 'PASS'|'REVIEW'}."""
     records = {}
     for pass_list in glob.glob(os.path.join(vadr_dir, "**", "*.vadr.pass.list"), recursive=True):
         with open(pass_list) as fh:
@@ -184,10 +153,6 @@ def load_vadr(vadr_dir):
 
 
 def load_kraken2(kraken2_dir):
-    """
-    Parse *_kraken2_report.txt files, sum % reads across dengue serotype taxa.
-    Returns {sample_id: '42.35'}.
-    """
     DENGUE_KEYWORDS = (
         "dengue virus 1", "dengue virus 2", "dengue virus 3", "dengue virus 4",
         "dengue virus type 1", "dengue virus type 2",
@@ -219,11 +184,6 @@ def load_kraken2(kraken2_dir):
 
 
 def load_trimstats(trimstat_dir):
-    """
-    Parse *_trimstats.txt (trimmomatic PE stdout/stderr).
-    Extracts 'Input Read Pairs: N' → num_raw_reads = N * 2.
-    Returns {sample_id: str(n)}.
-    """
     records = {}
     for path in glob.glob(os.path.join(trimstat_dir, "*_trimstats.txt")):
         sid = os.path.basename(path).replace("_trimstats.txt", "")
@@ -239,11 +199,6 @@ def load_trimstats(trimstat_dir):
 
 
 def load_phix_log(phix_log_dir):
-    """
-    Parse *_phix_log.txt (bbduk stderr).
-    Extracts 'Result:  N reads' → num_clean_reads.
-    Returns {sample_id: str(n)}.
-    """
     records = {}
     for path in glob.glob(os.path.join(phix_log_dir, "*_phix_log.txt")):
         sid = os.path.basename(path).replace("_phix_log.txt", "")
@@ -257,10 +212,6 @@ def load_phix_log(phix_log_dir):
             pass
     return records
 
-
-# ---------------------------------------------------------------------------
-# Main
-# ---------------------------------------------------------------------------
 
 def main():
     parser = argparse.ArgumentParser(description="Aggregate pipeline results into summary TXT")
@@ -300,9 +251,9 @@ def main():
         "kraken2_percent",
         "reference", "start", "end",
         "num_raw_reads", "num_clean_reads", "num_mapped_reads", "percent_mapped_clean_reads",
-        "cov_bases_mapped", "percent_genome_cov_map",
+        "cov_bases_mapped", "percent_genome_cov_aligned",
         "mean_depth", "mean_base_qual", "mean_map_qual",
-        "assembly_length", "numN", "percent_ref_genome_cov",
+        "assembly_length", "numN", "percent_genome_cov_assembled",
         "vadr_flag", "qc_flag",
     ]
 
@@ -325,7 +276,7 @@ def main():
         k2  = kraken2.get(sid, "NA")
 
         if unclassified:
-            _best_pct  = cov.get("percent_genome_cov_map")
+            _best_pct  = cov.get("percent_genome_cov_aligned")
             _best_sero = _REF_SERO.get((cov.get("reference") or "").split()[0], "")
             if _best_pct and _best_sero:
                 qf = f"FAIL: Low coverage (best: {float(_best_pct):.1f}% {_best_sero})"
@@ -368,13 +319,13 @@ def main():
             "num_mapped_reads":              mapped,
             "percent_mapped_clean_reads":    pct_mapped,
             "cov_bases_mapped":              cov.get("cov_bases_mapped", "NA"),
-            "percent_genome_cov_map":        cov.get("percent_genome_cov_map", "NA"),
+            "percent_genome_cov_aligned":    cov.get("percent_genome_cov_aligned", "NA"),
             "mean_depth":                    cov.get("mean_depth", "NA"),
             "mean_base_qual":                cov.get("mean_base_qual", "NA"),
             "mean_map_qual":                 cov.get("mean_map_qual", "NA"),
             "assembly_length":               con.get("assembly_length", "NA"),
             "numN":                          con.get("numN", "NA"),
-            "percent_ref_genome_cov":        pct_ref,
+            "percent_genome_cov_assembled":  pct_ref,
             "vadr_flag":                     vf,
             "qc_flag":                       qf,
         }
@@ -386,6 +337,96 @@ def main():
         writer.writerows(rows)
 
     print(f"Summary report written: {args.output} ({len(rows)} samples)", file=sys.stderr)
+
+    emit_daytona_mqc_tables(rows)
+
+    typed_samples = [sid for sid in all_samples if serotype.get(sid) != 'unclassified']
+
+    def _stage_check(label, produced_ids, expected_ids):
+        if expected_ids and not any(sid in produced_ids for sid in expected_ids):
+            print(f"ERROR: {label} produced zero successful outputs across "
+                  f"{len(expected_ids)} sample(s) that should have reached it. "
+                  f"This looks like a systemic failure (bad container, missing "
+                  f"reference, wrong mount), not per-sample QC/coverage variation.",
+                  file=sys.stderr)
+            return True
+        return False
+
+    systemic_failure = False
+    systemic_failure |= _stage_check('samtools_coverage (post-ivar mapping)', coverage, typed_samples)
+    systemic_failure |= _stage_check('ivar_consensus', consensus, typed_samples)
+    systemic_failure |= _stage_check('qc_gate', qc, typed_samples)
+
+    qc_pass_samples = [sid for sid in typed_samples if qc.get(sid, '').startswith('PASS')]
+    systemic_failure |= _stage_check('vadr', vadr, qc_pass_samples)
+
+    if systemic_failure:
+        sys.exit(1)
+
+
+# MultiQC custom-content emitters
+def _mqc_preamble(section_id, section_name, description, pconfig=None, headers=None):
+    lines = [
+        f"# id: '{section_id}'",
+        f"# section_name: '{section_name}'",
+        f"# description: '{description}'",
+        "# plot_type: 'table'",
+    ]
+    if pconfig:
+        lines.append("# pconfig:")
+        for k, v in pconfig.items():
+            val = str(v).lower() if isinstance(v, bool) else f"'{v}'"
+            lines.append(f"#     {k}: {val}")
+    if headers:
+        lines.append("# headers:")
+        for col, opts in headers.items():
+            lines.append(f"#     {col}:")
+            for k, v in opts.items():
+                val = str(v).lower() if isinstance(v, bool) else f"'{v}'"
+                lines.append(f"#         {k}: {val}")
+    return lines
+
+
+def _write_mqc(path, preamble_lines, header, rows):
+    with open(path, 'w') as fh:
+        for pl in preamble_lines:
+            fh.write(pl + '\n')
+        fh.write('\t'.join(header) + '\n')
+        for row in sorted(rows, key=lambda r: r['sample_id']):
+            fh.write('\t'.join(str(row.get(h, 'NA')) for h in header) + '\n')
+    print(f"summary_report.py: wrote {path} ({len(rows)} sample(s))", file=sys.stderr)
+
+
+DAYTONA_SEROTYPE_HEADER = ['sample_id', 'serotype', 'nextclade_clade', 'mean_depth',
+                           'percent_genome_cov_assembled', 'qc_flag']
+DAYTONA_ASSEMBLY_HEADER = ['sample_id', 'assembly_length', 'numN',
+                           'percent_genome_cov_assembled', 'vadr_flag']
+
+
+def emit_daytona_mqc_tables(rows):
+    if not rows:
+        return
+    _write_mqc(
+        'daytona_dengue_serotype_mqc.tsv',
+        _mqc_preamble(
+            'daytona_dengue_serotype', 'Serotype/Clade and Coverage QC',
+            'Kraken2/coverage-confirmed DENV serotype call, Nextclade clade assignment, and '
+            'coverage-based QC verdict.',
+            pconfig={'id': 'daytona_dengue_serotype_table', 'col1_header': 'Sample',
+                     'no_violin': True},
+        ),
+        DAYTONA_SEROTYPE_HEADER, rows,
+    )
+    _write_mqc(
+        'daytona_dengue_assembly_mqc.tsv',
+        _mqc_preamble(
+            'daytona_dengue_assembly', 'Assembly QC',
+            'Consensus assembly completeness and VADR GenBank-submission verdict.',
+            pconfig={'id': 'daytona_dengue_assembly_table', 'col1_header': 'Sample',
+                     'no_violin': True},
+        ),
+        DAYTONA_ASSEMBLY_HEADER, rows,
+    )
 
 
 def load_qc(qc_dir):

@@ -6,7 +6,7 @@ Reads samtools coverage output and the consensus FASTA.
 Writes a 2-column TSV: sample_id, qc_flag.
 
 QC thresholds:
-    percent_ref_genome_cov >= 5%  AND  mean_depth >= 30x  → PASS
+    percent_genome_cov_assembled >= 5%  AND  mean_depth >= 30x  → PASS
 """
 
 import argparse

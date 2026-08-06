@@ -1,6 +1,6 @@
 process bwa {
     tag "${meta.id}"
-    publishDir "${params.output}/${meta.id}/bwa", mode: 'copy', pattern: "*.sam"
+    publishDir { "${params.output}/${meta.id}/bwa" }, mode: 'copy', pattern: "*.sam"
 
     input:
         tuple val(meta), path(reads)
