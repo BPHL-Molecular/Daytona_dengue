@@ -1,0 +1,121 @@
+# Daytona Dengue MultiQC dashboard configuration
+
+title: "Daytona Dengue: DENV NGS Analysis Report"
+intro_text: >
+  Interactive summary report (serotype ID, coverage QC, consensus assembly QC, clade assignment).
+
+report_header_info:
+  - Pipeline: "Daytona Dengue (https://github.com/BPHL-Molecular/Daytona_dengue)"
+  - Version: "v1.0.0"
+  - Contact: "bphl-sebioinformatics@flhealth.gov"
+  - Laboratory: "Florida Bureau of Public Health Laboratories"
+
+custom_css_files:
+  - "daytona_dengue_report.css"
+
+extra_fn_clean_exts:
+  - "_raw"
+  - "_clean"
+
+max_table_rows: 1
+
+skip_versions_section: true
+
+exclude_modules:
+  - "bbmap"
+  - "kraken"
+  - "samtools"
+  - "trimmomatic"
+
+module_order:
+  - fastqc:
+      name: "FastQC (raw reads)"
+      anchor: "fastqc_raw"
+      path_filters:
+        - "*/fastqc/*"
+  - fastqc:
+      name: "FastQC (clean reads)"
+      anchor: "fastqc_clean"
+      path_filters:
+        - "*/fastqc_clean/*"
+
+remove_sections:
+  - "fastqc_raw_fastqc_sequence_counts"
+  - "fastqc_raw_fastqc_per_base_sequence_quality"
+  - "fastqc_raw_fastqc_per_sequence_quality_scores"
+  - "fastqc_raw_fastqc_raw_per_base_sequence_content"
+  - "fastqc_raw_fastqc_per_sequence_gc_content"
+  - "fastqc_raw_fastqc_per_base_n_content"
+  - "fastqc_raw_fastqc_sequence_length_distribution"
+  - "fastqc_raw_fastqc_sequence_duplication_levels"
+  - "fastqc_raw_fastqc_overrepresented_sequences"
+  - "fastqc_raw_fastqc_top_overrepresented_sequences"
+  - "fastqc_raw_fastqc_adapter_content"
+  - "fastqc_raw_fastqc_status_checks"
+  - "fastqc_clean_fastqc_clean_per_base_sequence_content"
+  - "fastqc_clean_fastqc_per_sequence_gc_content"
+  - "fastqc_clean_fastqc_per_base_n_content"
+  - "fastqc_clean_fastqc_sequence_length_distribution"
+  - "fastqc_clean_fastqc_overrepresented_sequences"
+  - "fastqc_clean_fastqc_top_overrepresented_sequences"
+
+report_section_order:
+  daytona_dengue_serotype: { order: 4000 }
+  daytona_dengue_assembly: { order: 3000 }
+  fastqc_clean:            { order: 2000 }
+  daytona_dengue_versions: { order: 1000 }
+
+custom_content:
+  order:
+    - daytona_dengue_serotype
+    - daytona_dengue_assembly
+    - daytona_dengue_versions
+
+table_columns_placement:
+  "FastQC (raw reads)":
+    total_sequences: 100
+    median_sequence_length: 110
+    percent_gc: 120
+  "FastQC (clean reads)":
+    total_sequences: 200
+    median_sequence_length: 210
+    percent_gc: 220
+
+# MultiQC's own default for median_sequence_length flips between the two runs, so pin it
+table_columns_visible:
+  "FastQC (raw reads)":
+    percent_duplicates: false
+    median_sequence_length: true
+  "FastQC (clean reads)":
+    percent_duplicates: false
+    median_sequence_length: true
+
+table_cond_formatting_rules:
+  serotype_qc_flag:
+    pass:
+      - s_eq: "PASS"
+    fail:
+      - s_contains: "FAIL"
+
+  vadr_flag:
+    pass:
+      - s_eq: "PASS"
+    warn:
+      - s_eq: "REVIEW"
+    fail:
+      - s_contains: "FAIL"
+
+  serotype:
+    pass:
+      - s_eq: "DENV1"
+      - s_eq: "DENV2"
+      - s_eq: "DENV3"
+      - s_eq: "DENV4"
+    warn:
+      - s_eq: "unclassified"
+
+  nextclade_clade:
+    warn:
+      - s_eq: "unclassified"
+      - s_eq: "unassigned"
+      - s_eq: "Outgroup"

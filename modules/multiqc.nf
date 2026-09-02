@@ -1,50 +1,67 @@
 process multiqc {
-   input:
-      //tuple val(y), val(x)
-      val(x)
+    tag "multiqc"
+    publishDir { "${params.output}" }, mode: 'copy'
 
-   output:
-      //stdout
-      //path 'xfile.txt', emit: aLook
-      //val "${params.output}/dengue1/${x}", emit: outputpath1
-      //path "${params.output}/${x}_trim_2.fastq", emit: trimR2
-      val "${x}"
-      
-   """  
-   if [[ ${x} =~ SER1_ ]];then
-      #Run multiqc
-      multiqc ${params.output}/dengue1/${x}/${x}_*_fastqc.zip -o ${params.output}/dengue1/${x}
+    input:
+        path summary
+        path multiqc_config
+        path custom_css
+        path nf_config
+        path mqc_tables, stageAs: 'mqc_in/*'
 
-      #Map reads to reference
-      mkdir ${params.output}/dengue1/${x}/alignment
-      mv ${params.output}/dengue1/${x}/multiqc_data ${params.output}/dengue1/${x}/${x}_multiqc_data 
-      
-   elif [[ ${x} =~ SER2_ ]];then
-      #Run multiqc
-      multiqc ${params.output}/dengue2/${x}/${x}_*_fastqc.zip -o ${params.output}/dengue2/${x}
+    output:
+        path("daytona_dengue_report.html"), emit: report
 
-      #Map reads to reference
-      mkdir ${params.output}/dengue2/${x}/alignment
-      mv ${params.output}/dengue2/${x}/multiqc_data ${params.output}/dengue2/${x}/${x}_multiqc_data
-      
-   elif [[ ${x} =~ SER3_ ]];then
-      #Run multiqc
-      multiqc ${params.output}/dengue3/${x}/${x}_*_fastqc.zip -o ${params.output}/dengue3/${x}
+    script:
+    """
+    mkdir -p mqc_in
+    cp mqc_in/*_mqc.tsv ${params.output}/ 2>/dev/null || true
 
-      #Map reads to reference
-      mkdir ${params.output}/dengue3/${x}/alignment
-      mv ${params.output}/dengue3/${x}/multiqc_data ${params.output}/dengue3/${x}/${x}_multiqc_data
-      
-   elif [[ ${x} =~ SER4_ ]];then
-      #Run multiqc
-      multiqc ${params.output}/dengue4/${x}/${x}_*_fastqc.zip -o ${params.output}/dengue4/${x}
+    {
+      echo "# id: 'daytona_dengue_versions'"
+      echo "# section_name: 'Software Versions'"
+      echo "# description: 'Tool versions from the container tags pinned in nextflow.config.'"
+      echo "# plot_type: 'table'"
+      echo "# pconfig:"
+      echo "#     id: 'daytona_dengue_versions_table'"
+      echo "#     col1_header: 'Software'"
+      echo "#     no_violin: true"
+      echo "#     rows_are_samples: false"
+      echo "# headers:"
+      echo "#     Version:"
+      echo "#         scale: false"
+      echo "#         format: '{}'"
+      printf 'Software\\tVersion\\n'
+      grep -hoE "docker://[^']+" ${nf_config} \\
+        | sed -E 's#docker://[^/]*/([^:]+):(.+)#\\1\\t\\2#' \\
+        | sort -u
+    } > "${params.output}/daytona_dengue_versions_mqc.tsv"
 
-      #Map reads to reference
-      mkdir ${params.output}/dengue4/${x}/alignment
-      mv ${params.output}/dengue4/${x}/multiqc_data ${params.output}/dengue4/${x}/${x}_multiqc_data
-   else
-      echo "No serotyped sequence is in fastqs folder"
-   fi
+    multiqc ${params.output} \\
+        -c ${multiqc_config} \\
+        --filename daytona_dengue_report.html \\
+        --interactive \\
+        --ignore "*/multiqc/*" \\
+        --ignore "*daytona_dengue_report*" \\
+        --ignore "*summary_report.txt"
 
-   """
+    rm -f "${params.output}"/daytona_dengue_*_mqc.tsv
+    """
+}
+
+process multiqc_sample {
+    tag "${meta.id}"
+    publishDir { "${params.output}/${meta.id}/multiqc" }, mode: 'copy'
+
+    input:
+        tuple val(meta), path(fastqc_zips)
+    output:
+        tuple val(meta), path("${meta.id}_multiqc_report.html"), emit: report
+        tuple val(meta), path("${meta.id}_multiqc_report_data"), emit: data
+
+    script:
+    def prefix = meta.id
+    """
+    multiqc . --interactive --filename ${prefix}_multiqc_report
+    """
 }
