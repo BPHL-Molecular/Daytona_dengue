@@ -254,7 +254,7 @@ def main():
         "cov_bases_mapped", "percent_genome_cov_aligned",
         "mean_depth", "mean_base_qual", "mean_map_qual",
         "assembly_length", "numN", "percent_genome_cov_assembled",
-        "vadr_flag", "qc_flag",
+        "vadr_flag", "serotype_qc_flag",
     ]
 
     _REF_SERO = {
@@ -328,7 +328,7 @@ def main():
             "numN":                          con.get("numN", "NA"),
             "percent_genome_cov_assembled":  pct_ref,
             "vadr_flag":                     vf,
-            "qc_flag":                       qf,
+            "serotype_qc_flag":              qf,
         }
         rows.append(row)
 
@@ -399,7 +399,7 @@ def _write_mqc(path, preamble_lines, header, rows):
 
 
 DAYTONA_SEROTYPE_HEADER = ['sample_id', 'serotype', 'nextclade_clade', 'mean_depth',
-                           'percent_genome_cov_assembled', 'qc_flag']
+                           'percent_genome_cov_aligned', 'serotype_qc_flag']
 DAYTONA_ASSEMBLY_HEADER = ['sample_id', 'assembly_length', 'numN',
                            'percent_genome_cov_assembled', 'vadr_flag']
 
@@ -431,7 +431,7 @@ def emit_daytona_mqc_tables(rows):
 
 
 def load_qc(qc_dir):
-    """Read *_qc.tsv files → {sample_id: qc_flag}."""
+    """Read *_qc.tsv files → {sample_id: serotype_qc_flag}."""
     records = {}
     for path in glob.glob(os.path.join(qc_dir, "*_qc.tsv")):
         with open(path, newline="") as fh:
@@ -439,7 +439,7 @@ def load_qc(qc_dir):
             for row in reader:
                 sid = row.get("sample_id", "").strip()
                 if sid:
-                    records[sid] = row.get("qc_flag", "NA").strip()
+                    records[sid] = row.get("serotype_qc_flag", "NA").strip()
     return records
 
 

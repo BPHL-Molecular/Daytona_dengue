@@ -91,7 +91,7 @@ table_columns_visible:
     median_sequence_length: true
 
 table_cond_formatting_rules:
-  qc_flag:
+  serotype_qc_flag:
     pass:
       - s_eq: "PASS"
     fail:

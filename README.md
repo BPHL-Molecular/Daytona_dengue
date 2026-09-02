@@ -114,7 +114,7 @@ flowchart LR
     style AQP fill:#f96,stroke:#333,color:#000
 ```
 
-> **QC GATE vs. assembly validation:** The **QC GATE** (`qc_flag`) is a minimum coverage (5%) and read-depth check (mean depth ≥ 30×) that confirms a sample's serotype classification is backed by enough on-target data, it is a serotype-classification QC, **not** a final assembly verdict, which is useful for surveillance purposes. Genome **assembly QC is performed by VADR**: a VADR **PASS** (`vadr_flag`) marks a submission-ready consensus, which is collected in `assemblies_qc_pass/`.
+> **QC GATE vs. assembly validation:** The **QC GATE** (`serotype_qc_flag`) is a minimum coverage (5%) and read-depth check (mean depth ≥ 30×) that confirms a sample's serotype classification is backed by enough on-target data, it is a serotype-classification QC, **not** a final assembly verdict, which is useful for surveillance purposes. Genome **assembly QC is performed by VADR**: a VADR **PASS** (`vadr_flag`) marks a submission-ready consensus, which is collected in `assemblies_qc_pass/`.
 
 ### 🧩 Modules
 
