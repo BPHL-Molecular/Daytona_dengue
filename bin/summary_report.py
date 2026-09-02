@@ -73,7 +73,7 @@ def load_screen_coverage(screen_cov_dir):
     records = {}
     for sid, denv_files in sample_files.items():
         best_cols = None
-        best_depth = -1.0
+        best_depth = 0.0
         for _denv, path in sorted(denv_files.items()):
             with open(path) as fh:
                 fh.readline()
@@ -254,7 +254,7 @@ def main():
         "cov_bases_mapped", "percent_genome_cov_aligned",
         "mean_depth", "mean_base_qual", "mean_map_qual",
         "assembly_length", "numN", "percent_genome_cov_assembled",
-        "vadr_flag", "qc_flag",
+        "vadr_flag", "serotype_qc_flag",
     ]
 
     _REF_SERO = {
@@ -276,16 +276,20 @@ def main():
         k2  = kraken2.get(sid, "NA")
 
         if unclassified:
-            _best_pct  = cov.get("percent_genome_cov_aligned")
-            _best_sero = _REF_SERO.get((cov.get("reference") or "").split()[0], "")
-            if _best_pct and _best_sero:
-                qf = f"FAIL: Low coverage (best: {float(_best_pct):.1f}% {_best_sero})"
-            elif _best_pct:
-                qf = f"FAIL: Low coverage (best: {float(_best_pct):.1f}%)"
+            _best_pct    = cov.get("percent_genome_cov_aligned")
+            _ref_tokens  = (cov.get("reference") or "").split()
+            _best_sero   = _REF_SERO.get(_ref_tokens[0], "") if _ref_tokens else ""
+            _pct_val     = float(_best_pct) if _best_pct else 0.0
+            if _pct_val > 0 and _best_sero:
+                qf = f"FAIL: Low coverage (best: {_pct_val:.1f}% {_best_sero})"
+            elif _pct_val > 0:
+                qf = f"FAIL: Low coverage (best: {_pct_val:.1f}%)"
             else:
                 qf = "FAIL: Unclassified"
+            serotype_qf = qf
         else:
-            qf = qc.get(sid, "NA")
+            qf = qc.get(sid, "NA")   # real qc_gate.py verdict; used below for vadr_flag backfill
+            serotype_qf = "PASS"     # serotype_detect.py already classified this sample
 
         if vf == "NA" and qf.startswith("FAIL"):
             vf = "FAIL"
@@ -327,7 +331,7 @@ def main():
             "numN":                          con.get("numN", "NA"),
             "percent_genome_cov_assembled":  pct_ref,
             "vadr_flag":                     vf,
-            "qc_flag":                       qf,
+            "serotype_qc_flag":              serotype_qf,
         }
         rows.append(row)
 
@@ -398,7 +402,7 @@ def _write_mqc(path, preamble_lines, header, rows):
 
 
 DAYTONA_SEROTYPE_HEADER = ['sample_id', 'serotype', 'nextclade_clade', 'mean_depth',
-                           'percent_genome_cov_assembled', 'qc_flag']
+                           'percent_genome_cov_aligned', 'serotype_qc_flag']
 DAYTONA_ASSEMBLY_HEADER = ['sample_id', 'assembly_length', 'numN',
                            'percent_genome_cov_assembled', 'vadr_flag']
 
@@ -411,7 +415,7 @@ def emit_daytona_mqc_tables(rows):
         _mqc_preamble(
             'daytona_dengue_serotype', 'Serotype/Clade and Coverage QC',
             'Kraken2/coverage-confirmed DENV serotype call, Nextclade clade assignment, and '
-            'coverage-based QC verdict.',
+            'serotype-classification QC verdict.',
             pconfig={'id': 'daytona_dengue_serotype_table', 'col1_header': 'Sample',
                      'no_violin': True},
         ),
@@ -430,7 +434,7 @@ def emit_daytona_mqc_tables(rows):
 
 
 def load_qc(qc_dir):
-    """Read *_qc.tsv files → {sample_id: qc_flag}."""
+    """Read *_qc.tsv files → {sample_id: serotype_qc_flag}."""
     records = {}
     for path in glob.glob(os.path.join(qc_dir, "*_qc.tsv")):
         with open(path, newline="") as fh:
@@ -438,7 +442,7 @@ def load_qc(qc_dir):
             for row in reader:
                 sid = row.get("sample_id", "").strip()
                 if sid:
-                    records[sid] = row.get("qc_flag", "NA").strip()
+                    records[sid] = row.get("serotype_qc_flag", "NA").strip()
     return records
 
 
