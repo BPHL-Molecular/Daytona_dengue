@@ -73,7 +73,7 @@ def load_screen_coverage(screen_cov_dir):
     records = {}
     for sid, denv_files in sample_files.items():
         best_cols = None
-        best_depth = -1.0
+        best_depth = 0.0
         for _denv, path in sorted(denv_files.items()):
             with open(path) as fh:
                 fh.readline()
@@ -278,10 +278,11 @@ def main():
         if unclassified:
             _best_pct  = cov.get("percent_genome_cov_aligned")
             _best_sero = _REF_SERO.get((cov.get("reference") or "").split()[0], "")
-            if _best_pct and _best_sero:
-                qf = f"FAIL: Low coverage (best: {float(_best_pct):.1f}% {_best_sero})"
-            elif _best_pct:
-                qf = f"FAIL: Low coverage (best: {float(_best_pct):.1f}%)"
+            _pct_val   = float(_best_pct) if _best_pct else 0.0
+            if _pct_val > 0 and _best_sero:
+                qf = f"FAIL: Low coverage (best: {_pct_val:.1f}% {_best_sero})"
+            elif _pct_val > 0:
+                qf = f"FAIL: Low coverage (best: {_pct_val:.1f}%)"
             else:
                 qf = "FAIL: Unclassified"
         else:
