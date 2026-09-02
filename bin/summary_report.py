@@ -276,17 +276,20 @@ def main():
         k2  = kraken2.get(sid, "NA")
 
         if unclassified:
-            _best_pct  = cov.get("percent_genome_cov_aligned")
-            _best_sero = _REF_SERO.get((cov.get("reference") or "").split()[0], "")
-            _pct_val   = float(_best_pct) if _best_pct else 0.0
+            _best_pct    = cov.get("percent_genome_cov_aligned")
+            _ref_tokens  = (cov.get("reference") or "").split()
+            _best_sero   = _REF_SERO.get(_ref_tokens[0], "") if _ref_tokens else ""
+            _pct_val     = float(_best_pct) if _best_pct else 0.0
             if _pct_val > 0 and _best_sero:
                 qf = f"FAIL: Low coverage (best: {_pct_val:.1f}% {_best_sero})"
             elif _pct_val > 0:
                 qf = f"FAIL: Low coverage (best: {_pct_val:.1f}%)"
             else:
                 qf = "FAIL: Unclassified"
+            serotype_qf = qf
         else:
-            qf = qc.get(sid, "NA")
+            qf = qc.get(sid, "NA")   # real qc_gate.py verdict; used below for vadr_flag backfill
+            serotype_qf = "PASS"     # serotype_detect.py already classified this sample
 
         if vf == "NA" and qf.startswith("FAIL"):
             vf = "FAIL"
@@ -328,7 +331,7 @@ def main():
             "numN":                          con.get("numN", "NA"),
             "percent_genome_cov_assembled":  pct_ref,
             "vadr_flag":                     vf,
-            "serotype_qc_flag":              qf,
+            "serotype_qc_flag":              serotype_qf,
         }
         rows.append(row)
 
@@ -412,7 +415,7 @@ def emit_daytona_mqc_tables(rows):
         _mqc_preamble(
             'daytona_dengue_serotype', 'Serotype/Clade and Coverage QC',
             'Kraken2/coverage-confirmed DENV serotype call, Nextclade clade assignment, and '
-            'coverage-based QC verdict.',
+            'serotype-classification QC verdict.',
             pconfig={'id': 'daytona_dengue_serotype_table', 'col1_header': 'Sample',
                      'no_violin': True},
         ),
