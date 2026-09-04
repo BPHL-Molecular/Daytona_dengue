@@ -4,7 +4,7 @@ All notable changes to the Daytona Dengue pipeline will be documented in this fi
 
 ---
 
-## [Unreleased] - SOP Format Refactor, Custom MultiQC dashboard and Nextflow 26 support
+## [v1.0.0] - SOP Format Refactor, Custom MultiQC dashboard and Nextflow 26 support
 
 ### Added
 
