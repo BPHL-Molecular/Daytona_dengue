@@ -4,7 +4,7 @@ All notable changes to the Daytona Dengue pipeline will be documented in this fi
 
 ---
 
-## [Unreleased] - Custom MultiQC dashboard and Nextflow 26 support
+## [Unreleased] - SOP Format Refactor, Custom MultiQC dashboard and Nextflow 26 support
 
 ### Added
 
@@ -50,11 +50,7 @@ All notable changes to the Daytona Dengue pipeline will be documented in this fi
   Serotype/Clade and Coverage QC table now shows `percent_genome_cov_assembled` next to
   `qc_flag` instead of `percent_genome_cov_aligned`, so the displayed number matches the
   verdict it drives
-
----
-
-## [Unreleased] — Post-refactor improvements
-
+  
 ### Added
 
 - Per-sample MultiQC (`multiqc_sample`) over each sample's raw + clean FastQC, published to
@@ -73,10 +69,6 @@ All notable changes to the Daytona Dengue pipeline will be documented in this fi
 - `bin/qc_gate.py` — updated QC coverage threshold; depth fail message now shows actual observed depth
 - `README.md` — corrected resource requirements; added conda setup step; added Nextflow version constraint note (≥23.04, <26.0); removed estimated runtime
 - `daytona_dengue.sh` — updated SLURM resource allocation
-
----
-
-## [Unreleased] — SOP Format Refactor
 
 ### Added
 
