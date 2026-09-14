@@ -114,7 +114,7 @@ flowchart LR
     style AQP fill:#f96,stroke:#333,color:#000
 ```
 
-> **QC GATE vs. assembly validation:** **`serotype_qc_flag`** reflects whether a confident serotype call could be made (≥10% genome breadth aligned to the best-matching reference, the same basis `serotype_detect.py` uses) — it fails only for samples that couldn't be classified at all. A separate, stricter internal check (5% assembled coverage, mean depth ≥ 30×) still gates whether a classified sample's consensus proceeds to VADR; if a sample fails that check it never reaches VADR and its `vadr_flag` is backfilled to **FAIL**. Genome **assembly QC is performed by VADR**: a VADR **PASS** (`vadr_flag`) marks a submission-ready consensus, which is collected in `assemblies_qc_pass/`.
+> **QC GATE vs. assembly validation:** **`serotype_qc_flag`** reflects whether a confident serotype call could be made (≥10% genome breadth aligned to the best-matching reference, the same basis `serotype_detect.py` uses) — it fails only for samples that couldn't be classified at all. A separate, stricter internal check (5% assembled coverage, mean depth ≥ 30×) still gates whether a classified sample's consensus proceeds to VADR; if a sample fails that check it never reaches VADR and its `vadr_flag` is backfilled to **FAIL**. Genome **assembly QC is performed by VADR**: VADR **PASS** consensus sequences are collected in `assemblies_qc_pass/pass/`, and VADR **REVIEW** consensus sequences with `percent_genome_cov_assembled` of at least 80% are collected in `assemblies_qc_pass/review/`.
 
 ### 🧩 Modules
 
@@ -153,6 +153,8 @@ output/
 │   ├── nextclade/
 │   └── multiqc/          # per-sample MultiQC (raw + clean FastQC)
 ├── assemblies_qc_pass/
+│   ├── pass/             # VADR PASS
+│   └── review/           # VADR REVIEW, >= 80% genome assembled
 ├── daytona_dengue_report.html   # interactive run-level dashboard
 └── summary_report.txt
 ```

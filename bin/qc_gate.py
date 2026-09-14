@@ -3,7 +3,7 @@
 qc_gate.py — Compute QC pass/fail for a dengue consensus assembly.
 
 Reads samtools coverage output and the consensus FASTA.
-Writes a 2-column TSV: sample_id, serotype_qc_flag.
+Writes a 3-column TSV: sample_id, serotype_qc_flag, percent_genome_cov_assembled.
 
 QC thresholds:
     percent_genome_cov_assembled >= 5%  AND  mean_depth >= 30x  → PASS
@@ -58,8 +58,8 @@ def main():
         flag = 'PASS'
 
     with open(args.output, 'w') as fh:
-        fh.write('sample_id\tserotype_qc_flag\n')
-        fh.write(f"{args.sample_id}\t{flag}\n")
+        fh.write('sample_id\tserotype_qc_flag\tpercent_genome_cov_assembled\n')
+        fh.write(f"{args.sample_id}\t{flag}\t{pct_genome:.4f}\n")
 
     print(f"QC for {args.sample_id}: {flag}", file=sys.stderr)
 

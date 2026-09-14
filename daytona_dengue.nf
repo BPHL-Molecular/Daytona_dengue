@@ -196,10 +196,12 @@ workflow {
     qc_gate(ch_qc_input)
 
     ch_qc_pass = qc_gate.out.qc
-        .filter { _meta, qc_file ->
+        .map { meta, qc_file ->
             def lines = qc_file.readLines()
-            lines.size() > 1 && lines[1].split('\t')[1].trim() == 'PASS'
+            [ meta, lines.size() > 1 ? lines[1].split('\t')*.trim() : [] ]
         }
+        .filter { _meta, cols -> cols.size() > 2 && cols[1] == 'PASS' }
+        .map { meta, cols -> [ meta + [ pct_assembled: cols[2] as double ], cols ] }
 
     ch_vadr_input = ch_qc_pass
         .map { meta, _qc -> [ meta.id, meta ] }

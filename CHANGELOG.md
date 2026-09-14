@@ -4,6 +4,21 @@ All notable changes to the Daytona Dengue pipeline will be documented in this fi
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- `modules/vadr.nf` - VADR REVIEW consensus sequences with `percent_genome_cov_assembled` >= 80
+  are published to `assemblies_qc_pass/review/`
+
+### Changed
+
+- `modules/vadr.nf` - VADR PASS consensus sequences are published to `assemblies_qc_pass/pass/`
+- `bin/qc_gate.py` - `<sample>_qc.tsv` has a third column, `percent_genome_cov_assembled`, which
+  `daytona_dengue.nf` carries into `meta.pct_assembled` for the VADR review gate
+
+---
+
 ## [v1.0.0] - SOP Format Refactor, Custom MultiQC dashboard and Nextflow 26 support
 
 ### Added
